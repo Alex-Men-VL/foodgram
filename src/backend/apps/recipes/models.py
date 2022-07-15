@@ -91,5 +91,5 @@ class RecipeIngredient(models.Model):
 
     def __str__(self) -> str:
         return (
-            f'{self.recipe}: {self.ingredient.title} {self.quantity}'.strip()
+            f'{self.recipe}: {self.ingredient.name} {self.quantity}'.strip()
         )
