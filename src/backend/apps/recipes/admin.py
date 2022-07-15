@@ -20,10 +20,10 @@ class RecipeAdmin(admin.ModelAdmin):
             None,
             {
                 'fields': (
-                    'title',
+                    'name',
                     'image',
                     'author',
-                    'description',
+                    'text',
                     'tags',
                     'cooking_time',
                 ),
@@ -32,18 +32,22 @@ class RecipeAdmin(admin.ModelAdmin):
         (
             'Техническая информация',
             {
-                'classes': ('collapse',),
-                'fields': ('uuid',),
+                'classes': (
+                    'collapse',
+                ),
+                'fields': (
+                    'uuid',
+                ),
             },
         ),
     )
     list_display = (
-        'title',
+        'name',
         'author',
         'get_image_preview',
     )
     search_fields = (
-        'title',
+        'name',
     )
     list_filter = (
         'author',

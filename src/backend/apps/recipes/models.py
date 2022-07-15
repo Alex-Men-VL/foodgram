@@ -15,7 +15,7 @@ class Recipe(behaviors.Timestamped):
         editable=False,
         db_index=True,
     )
-    title = models.CharField(
+    name = models.CharField(
         'Название',
         max_length=255,
         db_index=True,
@@ -31,7 +31,7 @@ class Recipe(behaviors.Timestamped):
         'Картинка',
         upload_to='recipes/images',
     )
-    description = models.TextField(
+    text = models.TextField(
         'Текстовое описание',
     )
     ingredients = models.ManyToManyField(
@@ -57,11 +57,11 @@ class Recipe(behaviors.Timestamped):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = [
-            'title',
+            'name',
         ]
 
     def __str__(self) -> str:
-        return f'{self.title}'.strip()
+        return f'{self.name}'.strip()
 
 
 class RecipeIngredient(models.Model):
