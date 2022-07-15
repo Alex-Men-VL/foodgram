@@ -24,6 +24,7 @@ INSTALLED_APPS = [
 
     'apps.users',
     'apps.tags',
+    'apps.ingredients',
 ]
 
 MIDDLEWARE = [
