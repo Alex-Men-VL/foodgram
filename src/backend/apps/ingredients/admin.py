@@ -10,8 +10,8 @@ class IngredientAdmin(admin.ModelAdmin):
             None,
             {
                 'fields': (
-                    'title',
-                    'unit',
+                    'name',
+                    'measurement_unit',
                 ),
             },
         ),
@@ -24,12 +24,12 @@ class IngredientAdmin(admin.ModelAdmin):
         ),
     )
     list_display = (
-        'title',
-        'unit',
+        'name',
+        'measurement_unit',
     )
     search_fields = (
-        'title',
-        'unit',
+        'name',
+        'measurement_unit',
     )
     readonly_fields = (
         'uuid',

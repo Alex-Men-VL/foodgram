@@ -13,12 +13,12 @@ class Ingredient(behaviors.Timestamped):
         editable=False,
         db_index=True,
     )
-    title = models.CharField(
+    name = models.CharField(
         'Название',
         max_length=255,
         db_index=True,
     )
-    unit = models.CharField(
+    measurement_unit = models.CharField(
         'Единицы измерения',
         max_length=100,
     )
@@ -26,11 +26,13 @@ class Ingredient(behaviors.Timestamped):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-        ordering = ('title',)
+        ordering = (
+            'name',
+        )
         unique_together = (
-            'title',
-            'unit',
+            'name',
+            'measurement_unit',
         )
 
     def __str__(self) -> str:
-        return f'{self.title}, {self.unit}'.strip()
+        return f'{self.name}, {self.measurement_unit}'.strip()

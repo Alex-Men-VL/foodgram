@@ -15,7 +15,7 @@ class IngredientTest(TestCase):
         """Проверка создания ингредиента и корректность метода __str__."""
 
         self.assertTrue(isinstance(self.ingredient, Ingredient))
-        self.assertEqual(str(self.ingredient), f'{self.ingredient.title}, {self.ingredient.unit}'.strip())
+        self.assertEqual(str(self.ingredient), f'{self.ingredient.name}, {self.ingredient.measurement_unit}'.strip())
 
     def test_title_unit_unique_together(self) -> None:
         """Проверка совместной уникальности полей title и unit."""
@@ -23,7 +23,7 @@ class IngredientTest(TestCase):
         with self.assertRaises(IntegrityError):
             baker.make(
                 'ingredients.Ingredient',
-                title='Помидор',
-                unit='г',
+                name='Помидор',
+                measurement_unit='г',
                 _quantity=2,
             )

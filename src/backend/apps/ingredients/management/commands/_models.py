@@ -2,8 +2,8 @@ import pydantic
 
 
 class Ingredient(pydantic.BaseModel):
-    title: str = pydantic.Field(alias='name')
-    unit: str = pydantic.Field(alias='measurement_unit')
+    name: str
+    measurement_unit: str
 
     class Config:
         validate_assignment = True
