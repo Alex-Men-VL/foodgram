@@ -9,6 +9,8 @@ from ..models import Ingredient
 
 class UploadIngredientsTest(TestCase):
     def call_command(self, *args: str, **kwargs: str) -> str:
+        """Вызов менеджмент команды."""
+
         out: StringIO = StringIO()
         call_command(
             'upload_ingredients',
@@ -20,11 +22,14 @@ class UploadIngredientsTest(TestCase):
         return out.getvalue()
 
     def test_dry_run(self) -> None:
+        """Тест вызовы команды без аргументов."""
+
         with self.assertRaises(CommandError):
-            out = self.call_command()
-            self.assertEqual(out, 'Передайте путь к локальному файлу или URL.\n')
+            self.call_command()
 
     def test_upload_from_json_file(self) -> None:
+        """Тест загрузки ингредиентов из локального JSON файла."""
+
         self.assertEqual(Ingredient.objects.count(), 0)
         file_path: str = '/data/ingredients.json'
 
@@ -36,6 +41,8 @@ class UploadIngredientsTest(TestCase):
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
     def test_upload_from_csv_file(self) -> None:
+        """Тест загрузки ингредиентов из локального CSV файла."""
+
         self.assertEqual(Ingredient.objects.count(), 0)
         file_path: str = '/data/ingredients.csv'
 
@@ -47,6 +54,8 @@ class UploadIngredientsTest(TestCase):
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
     def test_upload_from_json_url(self) -> None:
+        """Тест загрузки ингредиентов из JSON файла по URL."""
+
         self.assertEqual(Ingredient.objects.count(), 0)
         url: str = 'https://raw.githubusercontent.com/Alex-Men-VL/foodgram/main/data/ingredients.json'
 
@@ -58,6 +67,8 @@ class UploadIngredientsTest(TestCase):
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
     def test_upload_from_csv_url(self) -> None:
+        """Тест загрузки ингредиентов из CSV файла по URL."""
+
         self.assertEqual(Ingredient.objects.count(), 0)
         url: str = 'https://raw.githubusercontent.com/Alex-Men-VL/foodgram/main/data/ingredients.csv'
 
@@ -67,3 +78,73 @@ class UploadIngredientsTest(TestCase):
         )
         self.assertEqual(out, 'Ингредиенты успешно добавлены.\n')
         self.assertNotEqual(Ingredient.objects.count(), 0)
+
+    def test_file_not_found(self) -> None:
+        """Тест передачи несуществующего файла."""
+
+        self.assertEqual(Ingredient.objects.count(), 0)
+        file_path: str = '/data/wrong_filename.csv'
+
+        with self.assertRaises(CommandError):
+            self.call_command(
+                '--file',
+                file_path,
+            )
+
+        self.assertEqual(Ingredient.objects.count(), 0)
+
+    def test_unsupported_extension(self) -> None:
+        """Тест передачи файла с неподдерживаемым расширением."""
+
+        self.assertEqual(Ingredient.objects.count(), 0)
+        file_path: str = '/data/ingredients.txt'
+
+        with self.assertRaises(CommandError):
+            self.call_command(
+                '--file',
+                file_path,
+            )
+
+        self.assertEqual(Ingredient.objects.count(), 0)
+
+    def test_incorrect_url(self) -> None:
+        """Тест передачи URL с некорректной схемой."""
+
+        self.assertEqual(Ingredient.objects.count(), 0)
+        url: str = 'raw.githubusercontent.com/Alex-Men-VL/foodgram/main/data/ingredients.csv'
+
+        with self.assertRaises(CommandError):
+            self.call_command(
+                '--url',
+                url,
+            )
+
+        self.assertEqual(Ingredient.objects.count(), 0)
+
+    def test_url_file_not_found(self) -> None:
+        """Тест передачи некорректного URL файла."""
+
+        self.assertEqual(Ingredient.objects.count(), 0)
+        url: str = 'https://raw.githubusercontent.com/Alex-Men-VL/foodgram/main/data/ingredients'
+
+        with self.assertRaises(CommandError):
+            self.call_command(
+                '--url',
+                url,
+            )
+
+        self.assertEqual(Ingredient.objects.count(), 0)
+
+    def test_url_file_unsupported_extension(self) -> None:
+        """Тест передачи URL с неподдерживаемым расширением файла."""
+
+        self.assertEqual(Ingredient.objects.count(), 0)
+        url: str = 'https://raw.githubusercontent.com/Alex-Men-VL/foodgram/main/data/ingredients.txt'
+
+        with self.assertRaises(CommandError):
+            self.call_command(
+                '--url',
+                url,
+            )
+
+        self.assertEqual(Ingredient.objects.count(), 0)
