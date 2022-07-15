@@ -2,7 +2,6 @@ from pathlib import Path
 
 from environs import Env
 
-
 env = Env()
 env.read_env()
 
@@ -22,6 +21,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'apps.users',
 ]
 
 MIDDLEWARE = [
@@ -92,3 +93,5 @@ STATIC_ROOT = '/static'
 
 MEDIA_URL = env.str('DJANGO_MEDIA_URL', '/media/')
 MEDIA_ROOT = '/media'
+
+AUTH_USER_MODEL = 'users.CustomUser'
