@@ -16,12 +16,12 @@ class Tag(behaviors.Slugged, behaviors.Timestamped):
         editable=False,
         db_index=True,
     )
-    title = models.CharField(
+    name = models.CharField(
         'Название',
         max_length=255,
         unique=True,
     )
-    hex_code = models.CharField(
+    color = models.CharField(
         'Цветовой HEX-код',
         max_length=7,
         unique=True,
@@ -35,13 +35,13 @@ class Tag(behaviors.Slugged, behaviors.Timestamped):
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
         unique_together = (
-            'title',
-            'hex_code',
+            'name',
+            'color',
         )
 
     @property
     def slug_source(self) -> str:
-        return slugify(self.title)
+        return slugify(self.name)
 
     def __str__(self) -> str:
-        return f'{self.title}'.strip()
+        return f'{self.name}'.strip()

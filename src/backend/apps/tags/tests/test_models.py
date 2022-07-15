@@ -12,21 +12,21 @@ class TagTest(TestCase):
     def setUp(self) -> None:
         self.tag: Tag = baker.make(
             'tags.Tag',
-            hex_code='#FFFFFF',
+            color='#FFFFFF',
         )
 
     def test_ingredient_creation(self) -> None:
         """Проверка создания тега и корректность метода __str__."""
 
         self.assertTrue(isinstance(self.tag, Tag))
-        self.assertEqual(str(self.tag), f'{self.tag.title}'.strip())
+        self.assertEqual(str(self.tag), f'{self.tag.name}'.strip())
 
     def test_hex_code_validation(self) -> None:
         """Проверка валидации HEX-кода."""
 
         tag: Tag = baker.prepare(
             'tags.Tag',
-            hex_code='#FFFF',
+            color='#FFFF',
         )
         with self.assertRaises(ValidationError):
             tag.full_clean()
@@ -37,7 +37,7 @@ class TagTest(TestCase):
         with self.assertRaises(IntegrityError):
             baker.make(
                 'tags.Tag',
-                title='Черный',
-                hex_code='#000000',
+                name='Черный',
+                color='#000000',
                 _quantity=2,
             )

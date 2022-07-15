@@ -10,8 +10,8 @@ class TagAdmin(admin.ModelAdmin):
             None,
             {
                 'fields': (
-                    'title',
-                    'hex_code',
+                    'name',
+                    'color',
                     'slug',
                 ),
             },
@@ -25,13 +25,13 @@ class TagAdmin(admin.ModelAdmin):
         ),
     )
     list_display = (
-        'title',
-        'hex_code',
+        'name',
+        'color',
         'slug',
     )
     search_fields = (
-        'title',
-        'hex_code',
+        'name',
+        'color',
         'slug',
     )
     readonly_fields = (
@@ -39,6 +39,6 @@ class TagAdmin(admin.ModelAdmin):
     )
     prepopulated_fields = {
         'slug': (
-            'title',
+            'name',
         ),
     }
