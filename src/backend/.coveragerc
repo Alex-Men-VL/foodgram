@@ -1,0 +1,11 @@
+[run]
+include = apps/*
+omit =
+    *migrations*,
+    *tests*,
+    *__init__*
+plugins =
+    django_coverage_plugin
+
+[html]
+skip_empty = true
