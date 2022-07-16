@@ -8,6 +8,13 @@ from .models import Recipe
 class RecipeIngredientInline(admin.TabularInline):
     model = Recipe.ingredients.through
     extra = 2
+    classes = (
+        'collapse',
+    )
+    fields = (
+        'quantity',
+        'ingredient',
+    )
     raw_id_fields = (
         'ingredient',
     )
