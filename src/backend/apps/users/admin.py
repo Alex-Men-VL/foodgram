@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.urls import reverse
+from django.utils.html import format_html
 
 from . import forms
+from ..carts.models import Cart
 from ..favourites.admin import FavouriteInline
 from ..subscriptions.admin import SubscriptionInline
 from .models import CustomUser
@@ -33,10 +36,24 @@ class CustomUserAdmin(UserAdmin):
         (
             'Права',
             {
+                'classes': (
+                    'collapse',
+                ),
                 'fields': (
                     'is_staff',
                     'is_active',
                     'groups',
+                ),
+            },
+        ),
+        (
+            'Список покупок',
+            {
+                'classes': (
+                    'collapse',
+                ),
+                'fields': (
+                    'get_user_cart',
                 ),
             },
         ),
@@ -54,6 +71,7 @@ class CustomUserAdmin(UserAdmin):
     )
     readonly_fields = (
         'uuid',
+        'get_user_cart',
     )
     add_fieldsets = (
         (
@@ -80,3 +98,32 @@ class CustomUserAdmin(UserAdmin):
         FavouriteInline,
         SubscriptionInline,
     )
+
+    @admin.display(description='Список покупок')
+    def get_user_cart(self, obj: CustomUser) -> str:
+        try:
+            cart: Cart = obj.cart
+        except Cart.DoesNotExist:
+            url: str = (
+                '{}?{}'.format(
+                    reverse('admin:carts_cart_add'),
+                    f'owner={obj.pk}',
+                )
+            )
+            message: str = 'Добавить.'
+        else:
+            url = (
+                '{}'.format(
+                    reverse(
+                        'admin:carts_cart_change',
+                        args=(cart.pk,),
+                    ),
+                )
+            )
+            message = 'Просмотреть.'
+
+        return format_html(
+            '<a href="{}">{}</a>',
+            url,
+            message,
+        )
