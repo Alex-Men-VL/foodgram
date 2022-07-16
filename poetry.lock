@@ -154,10 +154,7 @@ python-versions = ">=3.7"
 [package.dependencies]
 django = "*"
 django-stubs-ext = ">=0.4.0"
-mypy = [
-    {version = ">=0.930"},
-    {version = ">=0.930,<0.970", optional = true, markers = "extra == \"compatible-mypy\""},
-]
+mypy = ">=0.930"
 tomli = "*"
 types-pytz = "*"
 types-PyYAML = "*"
@@ -645,7 +642,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "522cf8e0f154a496971c42e8b2e60a7b0415a15acad8363b58ec4239ecf2bd7d"
+content-hash = "ea997fb7088ebefbb9ebc097e3258783731cb8bebc8b8a821908fe06dc0820ac"
 
 [metadata.files]
 asgiref = [
