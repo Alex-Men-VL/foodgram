@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from . import forms
+from ..favourites.admin import FavouriteInline
+from ..subscriptions.admin import SubscriptionInline
 from .models import CustomUser
 
 
@@ -73,4 +75,8 @@ class CustomUserAdmin(UserAdmin):
                 ),
             },
         ),
+    )
+    inlines = (
+        FavouriteInline,
+        SubscriptionInline,
     )
