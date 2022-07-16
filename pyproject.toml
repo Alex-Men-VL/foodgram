@@ -17,6 +17,7 @@ Pillow = "^9.2.0"
 pydantic = "^1.9.1"
 python-slugify = "^6.1.2"
 django-coverage-plugin = "^2.0.3"
+django-debug-toolbar = "^3.5.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"

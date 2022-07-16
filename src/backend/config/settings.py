@@ -7,7 +7,6 @@ env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY = env.str('SECRET_KEY', 'SET DJANGO_SECRET_KEY')
 
 DEBUG = env.bool('DEBUG', False)
@@ -22,6 +21,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'debug_toolbar',
+
     'apps.users',
     'apps.tags',
     'apps.ingredients',
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -90,14 +92,27 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = env.str('DJANGO_STATIC_URL', '/static/')
 STATIC_ROOT = '/static'
 
-
 MEDIA_URL = env.str('DJANGO_MEDIA_URL', '/media/')
 MEDIA_ROOT = '/media'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+if DEBUG:
+    import socket
+
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
+
+
+def show_toolbar(request):
+    return True
+
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+}
