@@ -31,4 +31,4 @@ class Cart(behaviors.Timestamped):
         verbose_name_plural = 'Списки покупок'
 
     def __str__(self) -> str:
-        return f'{self.owner.full_name}'
+        return f'Список покупок: {self.owner.full_name}'
