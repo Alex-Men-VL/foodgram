@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  db:
+    ports:
+      # We only bind ports directly in development:
+      - '5432:5432'
+
+  backend:
+    volumes:
+      # We only mount source code in development:
+      - ./src/backend:/code
+
+  # In production going to use caddy
+  nginx:
+    build: ./docker/nginx
+    image: foodgram_nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./src/frontend/build:/code/frontend/
+      - ./docs/redoc.html:/code/frontend/api/docs/redoc.html
+      - ./docs/openapi-schema.yml:/code/frontend/api/docs/openapi-schema.yml
+      - static_data:/code/admin_panel/static/
+      - media_data:/code/admin_panel/media/
+    depends_on:
+      - backend

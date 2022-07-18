@@ -1,3 +1,4 @@
+import socket
 from pathlib import Path
 
 from environs import Env
@@ -7,7 +8,7 @@ env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = env.str('SECRET_KEY', 'SET DJANGO_SECRET_KEY')
+SECRET_KEY = env.str('DJANGO_SECRET_KEY', 'SET DJANGO_SECRET_KEY')
 
 DEBUG = env.bool('DEBUG', False)
 
@@ -103,16 +104,22 @@ MEDIA_ROOT = '/media'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 if DEBUG:
-    import socket
+    # https://django-debug-toolbar.readthedocs.io/en/stable/installation.html#configure-internal-ips
+    try:  # This might fail on some OS
+        INTERNAL_IPS = [
+            '{0}.1'.format(ip[:ip.rfind('.')])
+            for ip in socket.gethostbyname_ex(socket.gethostname())[2]
+        ]
+    except socket.error:  # pragma: no cover
+        INTERNAL_IPS = []
+    INTERNAL_IPS += ['127.0.0.1', '10.0.2.2']
 
-    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
-
-def show_toolbar(request):
-    return True
+def _custom_show_toolbar(request):
+    """Only show the debug toolbar to users with the superuser flag."""
+    return DEBUG
 
 
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+    'SHOW_TOOLBAR_CALLBACK': 'config.settings._custom_show_toolbar',
 }

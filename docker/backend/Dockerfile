@@ -1,4 +1,4 @@
-FROM python:3.10-slim-buster
+FROM python:3.10-slim-buster AS development_build
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     TINI_VERSION=v0.19.0 \
@@ -33,11 +33,11 @@ COPY poetry.lock pyproject.toml /code/
 RUN poetry config virtualenvs.create false \
     && poetry install --no-dev --no-interaction --no-ansi
 
-COPY ./src/backend /code/
-
 COPY ./docker/backend/entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x '/docker-entrypoint.sh'
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-RUN python manage.py collectstatic --noinput
+
+FROM development_build AS production_build
+COPY ./src/backend /code
