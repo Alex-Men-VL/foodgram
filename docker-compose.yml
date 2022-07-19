@@ -9,8 +9,11 @@ services:
   backend:
     image: 'foodgram_backend:dev'
     build:
+      target: development_build
       context: .
       dockerfile: ./docker/backend/Dockerfile
+      args:
+        DJANGO_ENV: development
     command: gunicorn --reload config.wsgi:application --bind 0:8000
     volumes:
       - ./data:/data

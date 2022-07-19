@@ -7,6 +7,8 @@ ENV PYTHONUNBUFFERED=1 \
 
 ENV PATH="$POETRY_HOME/bin:$PATH"
 
+ARG DJANGO_ENV
+
 RUN mkdir /code
 RUN apt-get update \
     && apt-get install -y \
@@ -31,7 +33,9 @@ COPY poetry.lock pyproject.toml /code/
 
 # Project initialization:
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-dev --no-interaction --no-ansi
+    && poetry install \
+        $(if [ "$DJANGO_ENV" = 'production' ]; then echo '--no-dev'; fi) \
+        --no-interaction --no-ansi
 
 COPY ./docker/backend/entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x '/docker-entrypoint.sh'
