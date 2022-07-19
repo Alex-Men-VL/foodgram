@@ -14,11 +14,11 @@ services:
       dockerfile: ./src/backend/docker/django/Dockerfile
       args:
         DJANGO_ENV: development
-    command: gunicorn --reload config.wsgi:application --bind 0:8000
+    command: bash ./docker/django/gunicorn.sh
     volumes:
       - ./data:/data
-      - static_data:/static
-      - media_data:/media
+      - static_data:/var/www/django/
+      - media_data:/var/www/django/media
     env_file: ./src/backend/.envs/.env
     environment:
       DJANGO_DATABASE_HOST: db

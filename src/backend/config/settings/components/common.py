@@ -25,6 +25,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -94,7 +95,7 @@ USE_TZ = True
 
 STATIC_URL = config('DJANGO_STATIC_URL', default='/static/')
 # Static root dir is commonly changed in production
-STATIC_ROOT = '/static'
+STATIC_ROOT = '/var/www/django/static'
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -126,7 +127,7 @@ TEMPLATES = [
 # https://docs.djangoproject.com/en/3.2/topics/files/
 
 MEDIA_URL = config('DJANGO_MEDIA_URL', default='/media/')
-MEDIA_ROOT = '/media'
+MEDIA_ROOT = '/var/www/django/media'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 

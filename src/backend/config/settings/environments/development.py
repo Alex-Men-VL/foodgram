@@ -15,7 +15,7 @@ from config.settings.components.common import (
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'backend',
+    'foodgram',
     'localhost',
     '0.0.0.0',  # noqa: S104
     '127.0.0.1',
@@ -88,9 +88,9 @@ NPLUSONE_WHITELIST = [
 # https://github.com/wemake-services/django-test-migrations
 
 # Set of badly named migrations to ignore:
-DTM_IGNORED_MIGRATIONS = frozenset((
-    (),
-))
+# DTM_IGNORED_MIGRATIONS = frozenset((
+#     (),
+# ))
 
 # django-extra-checks
 # https://github.com/kalekseev/django-extra-checks
