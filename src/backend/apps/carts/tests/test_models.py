@@ -16,5 +16,5 @@ class CartTest(TestCase):
         self.assertTrue(isinstance(self.cart, Cart))
         self.assertEqual(
             str(self.cart),
-            f'{self.cart.owner.full_name}',
+            f'Список покупок: {self.cart.owner.full_name}',
         )
