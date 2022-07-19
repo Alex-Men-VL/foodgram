@@ -11,7 +11,7 @@ services:
     build:
       target: development_build
       context: .
-      dockerfile: ./docker/backend/Dockerfile
+      dockerfile: ./src/backend/docker/django/Dockerfile
       args:
         DJANGO_ENV: development
     command: gunicorn --reload config.wsgi:application --bind 0:8000
@@ -30,7 +30,7 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: ./docker/frontend/Dockerfile
+      dockerfile: ./src/frontend/docker/node/Dockerfile
     image: foodgram_frontend
     volumes:
       - ./src/frontend:/app/result_build/

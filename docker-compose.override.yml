@@ -12,7 +12,9 @@ services:
 
   # In production going to use caddy
   nginx:
-    build: ./docker/nginx
+    build:
+      context: .
+      dockerfile: ./src/backend/docker/nginx/Dockerfile
     image: foodgram_nginx
     ports:
       - 80:80
