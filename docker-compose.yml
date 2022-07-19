@@ -4,7 +4,7 @@ services:
     image: postgres:12.0-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
-    env_file: ./.envs/.env
+    env_file: ./src/backend/.envs/.env
 
   backend:
     image: 'foodgram_backend:dev'
@@ -19,7 +19,7 @@ services:
       - ./data:/data
       - static_data:/static
       - media_data:/media
-    env_file: ./.envs/.env
+    env_file: ./src/backend/.envs/.env
     environment:
       DJANGO_DATABASE_HOST: db
     restart: unless-stopped
