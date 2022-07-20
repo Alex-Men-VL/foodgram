@@ -70,12 +70,14 @@ class RecipeIngredient(models.Model):
         related_name='recipe_ingredients',
         verbose_name='Ингредиент',
         on_delete=models.PROTECT,
+        db_index=True,
     )
     recipe = models.ForeignKey(
         'recipes.Recipe',
         related_name='recipe_ingredients',
         verbose_name='Рецепт',
         on_delete=models.CASCADE,
+        db_index=True,
     )
     quantity = models.PositiveIntegerField(
         'Количество',

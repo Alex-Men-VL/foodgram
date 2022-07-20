@@ -19,12 +19,14 @@ class Favourite(behaviors.Timestamped):
         related_name='favourites',
         verbose_name='Рецепт',
         on_delete=models.CASCADE,
+        db_index=True,
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='favourites',
         verbose_name='Владелец',
         on_delete=models.CASCADE,
+        db_index=True,
     )
 
     class Meta:

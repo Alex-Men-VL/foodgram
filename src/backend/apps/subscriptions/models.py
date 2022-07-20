@@ -21,6 +21,7 @@ class Subscription(behaviors.Timestamped):
         verbose_name='Подписчик',
         on_delete=models.CASCADE,
         help_text='Тот, кто подписался.',
+        db_index=True,
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -28,6 +29,7 @@ class Subscription(behaviors.Timestamped):
         verbose_name='Автор',
         on_delete=models.CASCADE,
         help_text='Тот, на кого подписался.',
+        db_index=True,
     )
 
     class Meta:
