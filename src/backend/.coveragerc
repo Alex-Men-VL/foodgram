@@ -3,7 +3,8 @@ include = apps/*
 omit =
     *migrations*,
     *tests*,
-    *__init__*
+    *__init__*,
+    *settings*
 plugins =
     django_coverage_plugin
 
