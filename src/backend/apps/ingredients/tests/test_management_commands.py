@@ -28,7 +28,7 @@ class UploadIngredientsTest(TestCase):
         with self.assertRaises(CommandError):
             self.call_command()
 
-    def _remove_ANSI_escape_sequences(self, text: str) -> str:
+    def _remove_ansi_escape_sequences(self, text: str) -> str:
         regex = r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])'
         ansi_escape = re.compile(regex)
         return ansi_escape.sub('', text)
@@ -43,7 +43,7 @@ class UploadIngredientsTest(TestCase):
             '--file',
             file_path,
         )
-        out_without_color = self._remove_ANSI_escape_sequences(out)
+        out_without_color = self._remove_ansi_escape_sequences(out)
         self.assertEqual(out_without_color, 'Ингредиенты успешно добавлены.\n')
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
@@ -57,7 +57,7 @@ class UploadIngredientsTest(TestCase):
             '--file',
             file_path,
         )
-        out_without_color = self._remove_ANSI_escape_sequences(out)
+        out_without_color = self._remove_ansi_escape_sequences(out)
         self.assertEqual(out_without_color, 'Ингредиенты успешно добавлены.\n')
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
@@ -71,7 +71,7 @@ class UploadIngredientsTest(TestCase):
             '--url',
             url,
         )
-        out_without_color = self._remove_ANSI_escape_sequences(out)
+        out_without_color = self._remove_ansi_escape_sequences(out)
         self.assertEqual(out_without_color, 'Ингредиенты успешно добавлены.\n')
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
@@ -85,7 +85,7 @@ class UploadIngredientsTest(TestCase):
             '--url',
             url,
         )
-        out_without_color = self._remove_ANSI_escape_sequences(out)
+        out_without_color = self._remove_ansi_escape_sequences(out)
         self.assertEqual(out_without_color, 'Ингредиенты успешно добавлены.\n')
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
