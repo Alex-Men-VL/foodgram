@@ -39,9 +39,7 @@ class Subscription(behaviors.Timestamped):
             'subscriber',
             'author',
         )
-        ordering = (
-            'created',
-        )
+        ordering = ('created',)
 
     def __str__(self) -> str:
         return f'{self.subscriber.full_name}: {self.author.full_name}'

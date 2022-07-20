@@ -8,7 +8,6 @@ from ..models import Tag
 
 
 class TagTest(TestCase):
-
     def setUp(self) -> None:
         self.tag: Tag = baker.make(
             'tags.Tag',

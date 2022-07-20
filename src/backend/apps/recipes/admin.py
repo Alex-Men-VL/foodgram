@@ -8,16 +8,12 @@ from .models import Recipe
 class RecipeIngredientInline(admin.TabularInline):
     model = Recipe.ingredients.through
     extra = 2
-    classes = (
-        'collapse',
-    )
+    classes = ('collapse',)
     fields = (
         'quantity',
         'ingredient',
     )
-    raw_id_fields = (
-        'ingredient',
-    )
+    raw_id_fields = ('ingredient',)
 
 
 @admin.register(Recipe)
@@ -39,12 +35,8 @@ class RecipeAdmin(admin.ModelAdmin):
         (
             'Техническая информация',
             {
-                'classes': (
-                    'collapse',
-                ),
-                'fields': (
-                    'uuid',
-                ),
+                'classes': ('collapse',),
+                'fields': ('uuid',),
             },
         ),
     )
@@ -53,22 +45,14 @@ class RecipeAdmin(admin.ModelAdmin):
         'author',
         'get_image_preview',
     )
-    search_fields = (
-        'name',
-    )
+    search_fields = ('name',)
     list_filter = (
         'author',
         'tags',
     )
-    inlines = (
-        RecipeIngredientInline,
-    )
-    readonly_fields = (
-        'uuid',
-    )
-    raw_id_fields = (
-        'tags',
-    )
+    inlines = (RecipeIngredientInline,)
+    readonly_fields = ('uuid',)
+    raw_id_fields = ('tags',)
 
     @admin.display(description='Изображение')
     def get_image_preview(self, obj: Recipe) -> SafeString:

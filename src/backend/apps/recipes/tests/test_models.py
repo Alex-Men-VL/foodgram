@@ -6,7 +6,6 @@ from ..models import Recipe
 
 
 class RecipeTest(TestCase):
-
     def setUp(self) -> None:
         self.recipe: Recipe = baker.make(
             'recipes.Recipe',

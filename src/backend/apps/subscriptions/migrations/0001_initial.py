@@ -18,12 +18,49 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Subscription',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified', models.DateTimeField(blank=True, db_index=True, null=True)),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)),
-                ('author', models.ForeignKey(help_text='Тот, на кого подписался.', on_delete=django.db.models.deletion.CASCADE, related_name='subscribers', to=settings.AUTH_USER_MODEL, verbose_name='Автор')),
-                ('subscriber', models.ForeignKey(help_text='Тот, кто подписался.', on_delete=django.db.models.deletion.CASCADE, related_name='subscriptions', to=settings.AUTH_USER_MODEL, verbose_name='Подписчик')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'created',
+                    models.DateTimeField(auto_now_add=True, db_index=True),
+                ),
+                (
+                    'modified',
+                    models.DateTimeField(blank=True, db_index=True, null=True),
+                ),
+                (
+                    'uuid',
+                    models.UUIDField(
+                        db_index=True, default=uuid.uuid4, editable=False
+                    ),
+                ),
+                (
+                    'author',
+                    models.ForeignKey(
+                        help_text='Тот, на кого подписался.',
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='subscribers',
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name='Автор',
+                    ),
+                ),
+                (
+                    'subscriber',
+                    models.ForeignKey(
+                        help_text='Тот, кто подписался.',
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='subscriptions',
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name='Подписчик',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Подписка на автора',

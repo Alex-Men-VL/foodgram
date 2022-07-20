@@ -7,7 +7,6 @@ from ..models import Ingredient
 
 
 class IngredientTest(TestCase):
-
     def setUp(self) -> None:
         self.ingredient: Ingredient = baker.make('ingredients.Ingredient')
 
@@ -15,7 +14,10 @@ class IngredientTest(TestCase):
         """Проверка создания ингредиента и корректность метода __str__."""
 
         self.assertTrue(isinstance(self.ingredient, Ingredient))
-        self.assertEqual(str(self.ingredient), f'{self.ingredient.name}, {self.ingredient.measurement_unit}'.strip())
+        self.assertEqual(
+            str(self.ingredient),
+            f'{self.ingredient.name}, {self.ingredient.measurement_unit}'.strip(),
+        )
 
     def test_title_unit_unique_together(self) -> None:
         """Проверка совместной уникальности полей title и unit."""

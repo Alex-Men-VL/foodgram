@@ -6,7 +6,6 @@ from ..models import Cart
 
 
 class CartTest(TestCase):
-
     def setUp(self) -> None:
         self.cart: Cart = baker.make('carts.Cart')
 

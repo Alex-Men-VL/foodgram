@@ -12,7 +12,11 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='recipe',
-            options={'ordering': ['name'], 'verbose_name': 'Рецепт', 'verbose_name_plural': 'Рецепты'},
+            options={
+                'ordering': ['name'],
+                'verbose_name': 'Рецепт',
+                'verbose_name_plural': 'Рецепты',
+            },
         ),
         migrations.RenameField(
             model_name='recipe',

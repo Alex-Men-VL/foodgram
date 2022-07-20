@@ -31,6 +31,4 @@ class IngredientAdmin(admin.ModelAdmin):
         'name',
         'measurement_unit',
     )
-    readonly_fields = (
-        'uuid',
-    )
+    readonly_fields = ('uuid',)

@@ -19,12 +19,46 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Cart',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified', models.DateTimeField(blank=True, db_index=True, null=True)),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)),
-                ('owner', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='cart', to=settings.AUTH_USER_MODEL, verbose_name='Владелец')),
-                ('recipes', models.ManyToManyField(related_name='carts', to='recipes.Recipe', verbose_name='Рецепты')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'created',
+                    models.DateTimeField(auto_now_add=True, db_index=True),
+                ),
+                (
+                    'modified',
+                    models.DateTimeField(blank=True, db_index=True, null=True),
+                ),
+                (
+                    'uuid',
+                    models.UUIDField(
+                        db_index=True, default=uuid.uuid4, editable=False
+                    ),
+                ),
+                (
+                    'owner',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='cart',
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name='Владелец',
+                    ),
+                ),
+                (
+                    'recipes',
+                    models.ManyToManyField(
+                        related_name='carts',
+                        to='recipes.Recipe',
+                        verbose_name='Рецепты',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Список покупок',

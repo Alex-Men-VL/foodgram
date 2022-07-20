@@ -36,9 +36,7 @@ class CustomUserAdmin(UserAdmin):
         (
             'Права',
             {
-                'classes': (
-                    'collapse',
-                ),
+                'classes': ('collapse',),
                 'fields': (
                     'is_staff',
                     'is_active',
@@ -49,23 +47,15 @@ class CustomUserAdmin(UserAdmin):
         (
             'Список покупок',
             {
-                'classes': (
-                    'collapse',
-                ),
-                'fields': (
-                    'get_user_cart',
-                ),
+                'classes': ('collapse',),
+                'fields': ('get_user_cart',),
             },
         ),
         (
             'Техническая информация',
             {
-                'classes': (
-                    'collapse',
-                ),
-                'fields': (
-                    'uuid',
-                ),
+                'classes': ('collapse',),
+                'fields': ('uuid',),
             },
         ),
     )
@@ -77,9 +67,7 @@ class CustomUserAdmin(UserAdmin):
         (
             None,
             {
-                'classes': (
-                    'wide',
-                ),
+                'classes': ('wide',),
                 'fields': (
                     'first_name',
                     'last_name',
@@ -104,21 +92,17 @@ class CustomUserAdmin(UserAdmin):
         try:
             cart: Cart = obj.cart
         except Cart.DoesNotExist:
-            url: str = (
-                '{}?{}'.format(
-                    reverse('admin:carts_cart_add'),
-                    f'owner={obj.pk}',
-                )
+            url: str = '{}?{}'.format(
+                reverse('admin:carts_cart_add'),
+                f'owner={obj.pk}',
             )
             message: str = 'Добавить.'
         else:
-            url = (
-                '{}'.format(
-                    reverse(
-                        'admin:carts_cart_change',
-                        args=(cart.pk,),
-                    ),
-                )
+            url = '{}'.format(
+                reverse(
+                    'admin:carts_cart_change',
+                    args=(cart.pk,),
+                ),
             )
             message = 'Просмотреть.'
 

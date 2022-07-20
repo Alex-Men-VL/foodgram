@@ -59,6 +59,9 @@ class Command(BaseCommand):
 
         ingredient_model = apps.get_model('ingredients', 'Ingredient')
         ingredient_model.objects.bulk_create(
-            [ingredient_model(**ingredient.dict()) for ingredient in ingredients],
+            [
+                ingredient_model(**ingredient.dict())
+                for ingredient in ingredients
+            ],
             ignore_conflicts=True,
         )

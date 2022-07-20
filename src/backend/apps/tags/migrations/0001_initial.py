@@ -9,20 +9,57 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='Tag',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('slug', models.SlugField(blank=True, max_length=255, unique=True)),
-                ('created', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified', models.DateTimeField(blank=True, db_index=True, null=True)),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)),
-                ('title', models.CharField(max_length=255, unique=True, verbose_name='Название')),
-                ('hex_code', models.CharField(db_index=True, max_length=7, unique=True, validators=[apps.tags.validators.validate_title_is_hexa_code], verbose_name='Цветовой HEX-код')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'slug',
+                    models.SlugField(blank=True, max_length=255, unique=True),
+                ),
+                (
+                    'created',
+                    models.DateTimeField(auto_now_add=True, db_index=True),
+                ),
+                (
+                    'modified',
+                    models.DateTimeField(blank=True, db_index=True, null=True),
+                ),
+                (
+                    'uuid',
+                    models.UUIDField(
+                        db_index=True, default=uuid.uuid4, editable=False
+                    ),
+                ),
+                (
+                    'title',
+                    models.CharField(
+                        max_length=255, unique=True, verbose_name='Название'
+                    ),
+                ),
+                (
+                    'hex_code',
+                    models.CharField(
+                        db_index=True,
+                        max_length=7,
+                        unique=True,
+                        validators=[
+                            apps.tags.validators.validate_title_is_hexa_code
+                        ],
+                        verbose_name='Цветовой HEX-код',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Тег',

@@ -10,9 +10,10 @@ from ..models import Subscription
 
 
 class SubscriptionTest(TestCase):
-
     def setUp(self) -> None:
-        self.subscription: Subscription = baker.make('subscriptions.Subscription')
+        self.subscription: Subscription = baker.make(
+            'subscriptions.Subscription',
+        )
 
     def test_subscription_creation(self) -> None:
         """Проверка создания подписки и корректность метода __str__."""

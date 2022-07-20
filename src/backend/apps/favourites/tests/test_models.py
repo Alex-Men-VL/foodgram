@@ -10,7 +10,6 @@ from ..models import Favourite
 
 
 class FavouriteTest(TestCase):
-
     def setUp(self) -> None:
         self.favourite: Favourite = baker.make('favourites.Favourite')
 
@@ -20,7 +19,8 @@ class FavouriteTest(TestCase):
         self.assertTrue(isinstance(self.favourite, Favourite))
         self.assertEqual(
             str(self.favourite),
-            f'{self.favourite.author.full_name}: {self.favourite.recipe.name}'.strip())
+            f'{self.favourite.author.full_name}: {self.favourite.recipe.name}'.strip(),
+        )
 
     def test_author_recipe_unique_together(self) -> None:
         """Проверка совместной уникальности полей title и unit."""

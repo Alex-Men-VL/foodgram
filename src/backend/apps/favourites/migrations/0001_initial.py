@@ -19,12 +19,47 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Favourite',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified', models.DateTimeField(blank=True, db_index=True, null=True)),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='favourites', to=settings.AUTH_USER_MODEL, verbose_name='Владелец')),
-                ('recipe', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='favourites', to='recipes.recipe', verbose_name='Рецепт')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'created',
+                    models.DateTimeField(auto_now_add=True, db_index=True),
+                ),
+                (
+                    'modified',
+                    models.DateTimeField(blank=True, db_index=True, null=True),
+                ),
+                (
+                    'uuid',
+                    models.UUIDField(
+                        db_index=True, default=uuid.uuid4, editable=False
+                    ),
+                ),
+                (
+                    'author',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='favourites',
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name='Владелец',
+                    ),
+                ),
+                (
+                    'recipe',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='favourites',
+                        to='recipes.recipe',
+                        verbose_name='Рецепт',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Избранное',

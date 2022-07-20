@@ -12,6 +12,10 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='subscription',
-            options={'ordering': ('created',), 'verbose_name': 'Подписка на автора', 'verbose_name_plural': 'Подписки на авторов'},
+            options={
+                'ordering': ('created',),
+                'verbose_name': 'Подписка на автора',
+                'verbose_name_plural': 'Подписки на авторов',
+            },
         ),
     ]

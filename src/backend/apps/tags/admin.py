@@ -34,11 +34,7 @@ class TagAdmin(admin.ModelAdmin):
         'color',
         'slug',
     )
-    readonly_fields = (
-        'uuid',
-    )
+    readonly_fields = ('uuid',)
     prepopulated_fields = {
-        'slug': (
-            'name',
-        ),
+        'slug': ('name',),
     }

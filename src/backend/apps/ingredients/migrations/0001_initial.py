@@ -8,19 +8,47 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='Ingredient',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True, db_index=True)),
-                ('modified', models.DateTimeField(blank=True, db_index=True, null=True)),
-                ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)),
-                ('title', models.CharField(db_index=True, max_length=255, verbose_name='Название')),
-                ('unit', models.CharField(max_length=100, verbose_name='Единицы измерения')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'created',
+                    models.DateTimeField(auto_now_add=True, db_index=True),
+                ),
+                (
+                    'modified',
+                    models.DateTimeField(blank=True, db_index=True, null=True),
+                ),
+                (
+                    'uuid',
+                    models.UUIDField(
+                        db_index=True, default=uuid.uuid4, editable=False
+                    ),
+                ),
+                (
+                    'title',
+                    models.CharField(
+                        db_index=True, max_length=255, verbose_name='Название'
+                    ),
+                ),
+                (
+                    'unit',
+                    models.CharField(
+                        max_length=100, verbose_name='Единицы измерения'
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Ингредиент',

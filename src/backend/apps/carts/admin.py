@@ -6,12 +6,8 @@ from .models import Cart
 class RecipeInline(admin.TabularInline):
     model = Cart.recipes.through
     extra = 2
-    fields = (
-        'recipe',
-    )
-    raw_id_fields = (
-        'recipe',
-    )
+    fields = ('recipe',)
+    raw_id_fields = ('recipe',)
     verbose_name = 'Рецепт'
     verbose_name_plural = 'Покупки'
 
@@ -22,35 +18,19 @@ class CartAdmin(admin.ModelAdmin):
         (
             None,
             {
-                'fields': (
-                    'owner',
-                ),
+                'fields': ('owner',),
             },
         ),
         (
             'Техническая информация',
             {
-                'classes': (
-                    'collapse',
-                ),
-                'fields': (
-                    'uuid',
-                ),
+                'classes': ('collapse',),
+                'fields': ('uuid',),
             },
         ),
     )
-    list_display = (
-        'owner',
-    )
-    search_fields = (
-        'owner',
-    )
-    inlines = (
-        RecipeInline,
-    )
-    readonly_fields = (
-        'uuid',
-    )
-    raw_id_fields = (
-        'owner',
-    )
+    list_display = ('owner',)
+    search_fields = ('owner',)
+    inlines = (RecipeInline,)
+    readonly_fields = ('uuid',)
+    raw_id_fields = ('owner',)
