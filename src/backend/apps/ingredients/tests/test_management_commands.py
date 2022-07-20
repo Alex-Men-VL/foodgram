@@ -1,5 +1,5 @@
-import re
 from io import StringIO
+import re
 
 from django.core.management import call_command
 from django.core.management import CommandError

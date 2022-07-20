@@ -3,12 +3,9 @@ import socket
 import typing
 
 from config.settings.components import config
-from config.settings.components.common import (
-    DATABASES,
-    INSTALLED_APPS,
-    MIDDLEWARE,
-)
-
+from config.settings.components.common import DATABASES
+from config.settings.components.common import INSTALLED_APPS
+from config.settings.components.common import MIDDLEWARE
 
 # Setting the development status:
 

@@ -1,7 +1,7 @@
-from config.settings.components import BASE_DIR, config
+from config.settings.components import BASE_DIR
+from config.settings.components import config
 
 from django.utils.translation import gettext_lazy as _
-
 
 SECRET_KEY = config('DJANGO_SECRET_KEY')
 
