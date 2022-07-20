@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('recipes', '0002_auto_20220716_0135'),
+        ('recipes', '0002_rename_recipes_fields'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
