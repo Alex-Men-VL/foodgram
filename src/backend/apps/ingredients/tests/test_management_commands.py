@@ -1,3 +1,4 @@
+import re
 from io import StringIO
 
 from django.core.management import call_command
@@ -27,6 +28,11 @@ class UploadIngredientsTest(TestCase):
         with self.assertRaises(CommandError):
             self.call_command()
 
+    def _remove_ANSI_escape_sequences(self, text: str) -> str:
+        regex = r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])'
+        ansi_escape = re.compile(regex)
+        return ansi_escape.sub('', text)
+
     def test_upload_from_json_file(self) -> None:
         """Тест загрузки ингредиентов из локального JSON файла."""
 
@@ -37,7 +43,8 @@ class UploadIngredientsTest(TestCase):
             '--file',
             file_path,
         )
-        self.assertEqual(out, 'Ингредиенты успешно добавлены.\n')
+        out_without_color = self._remove_ANSI_escape_sequences(out)
+        self.assertEqual(out_without_color, 'Ингредиенты успешно добавлены.\n')
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
     def test_upload_from_csv_file(self) -> None:
@@ -50,7 +57,8 @@ class UploadIngredientsTest(TestCase):
             '--file',
             file_path,
         )
-        self.assertEqual(out, 'Ингредиенты успешно добавлены.\n')
+        out_without_color = self._remove_ANSI_escape_sequences(out)
+        self.assertEqual(out_without_color, 'Ингредиенты успешно добавлены.\n')
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
     def test_upload_from_json_url(self) -> None:
@@ -63,7 +71,8 @@ class UploadIngredientsTest(TestCase):
             '--url',
             url,
         )
-        self.assertEqual(out, 'Ингредиенты успешно добавлены.\n')
+        out_without_color = self._remove_ANSI_escape_sequences(out)
+        self.assertEqual(out_without_color, 'Ингредиенты успешно добавлены.\n')
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
     def test_upload_from_csv_url(self) -> None:
@@ -76,7 +85,8 @@ class UploadIngredientsTest(TestCase):
             '--url',
             url,
         )
-        self.assertEqual(out, 'Ингредиенты успешно добавлены.\n')
+        out_without_color = self._remove_ANSI_escape_sequences(out)
+        self.assertEqual(out_without_color, 'Ингредиенты успешно добавлены.\n')
         self.assertNotEqual(Ingredient.objects.count(), 0)
 
     def test_file_not_found(self) -> None:

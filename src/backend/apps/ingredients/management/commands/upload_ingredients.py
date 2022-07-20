@@ -35,7 +35,7 @@ class Command(BaseCommand):
             raise CommandError('Не корректный формат файла.')
 
         self._save_ingredients(ingredients)
-        self.stdout.write('Ингредиенты успешно добавлены.')
+        self.stdout.write(self.style.SUCCESS('Ингредиенты успешно добавлены.'))
 
     def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument(
