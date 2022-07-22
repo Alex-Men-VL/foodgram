@@ -28,10 +28,10 @@ services:
       - frontend
 
   frontend:
+    image: 'foodgram_frontend:dev'
     build:
       context: .
       dockerfile: ./src/frontend/docker/node/Dockerfile
-    image: foodgram_frontend
     volumes:
       - ./src/frontend:/app/result_build/
 
