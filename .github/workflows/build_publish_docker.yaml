@@ -51,7 +51,7 @@ jobs:
     - name: Publish to Registry
       uses: docker/build-push-action@v2
       with:
-        context: src/frontend/
+        context: src/frontend/docker/node/
         push: true
         tags: almen/foodgram_frontend:latest
 
@@ -71,6 +71,6 @@ jobs:
     - name: Publish to Registry
       uses: docker/build-push-action@v2
       with:
-        context: src/backend/
+        context: src/backend/docker/django/
         push: true
         tags: almen/foodgram_backend:latest
