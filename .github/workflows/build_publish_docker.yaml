@@ -8,8 +8,8 @@ jobs:
   check:
     name: Check changed files
     outputs:
-      frontend: ${{ steps.check_files.outputs.front }}
-      backend: ${{ steps.check_files.outputs.back }}
+      frontend: ${{ steps.check_files.outputs.frontend }}
+      backend: ${{ steps.check_files.outputs.backend }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
