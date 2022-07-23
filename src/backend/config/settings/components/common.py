@@ -1,4 +1,3 @@
-from config.settings.components import BASE_DIR
 from config.settings.components import config
 
 from django.utils.translation import gettext_lazy as _
