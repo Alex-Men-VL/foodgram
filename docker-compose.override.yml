@@ -9,6 +9,7 @@ services:
     volumes:
       # We only mount source code in development:
       - ./src/backend:/code
+      - ./data:/data
 
   # In production going to use caddy
   nginx:
