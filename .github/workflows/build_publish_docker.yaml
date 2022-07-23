@@ -74,6 +74,10 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+    - name: Add environment variables to .env
+      run: |
+        echo DEBUG=0 >> ./src/backend/.envs/.env
+
     - name: Build, tag, and push backend image to Registry
       env:
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
