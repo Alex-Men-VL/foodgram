@@ -80,7 +80,7 @@ jobs:
         CONTAINER: backend
         IMAGE_NAME: foodgram_backend
         IMAGE_TAG: dev
-        run: |
-          docker-compose build $CONTAINER
-          docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
-          docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
+      run: |
+        docker-compose build $CONTAINER
+        docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
+        docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
