@@ -21,6 +21,7 @@ jobs:
       id: check_files
       run: |
           echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}"
+          echo ${{ steps.vars.outputs.tag }}
           echo "=============== list modified files ==============="
           git diff --name-only HEAD^ HEAD
           echo "========== check paths of modified files =========="
