@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+#  caddy:
+  backend:
+    <<: &backend
+      image: 'almen/foodgram_backend:prod'
+      build:
+        args:
+          DJANGO_ENV: production
+
+    expose:
+      - 8000
