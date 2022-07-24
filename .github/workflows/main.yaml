@@ -31,7 +31,7 @@ jobs:
       - name: Check modified files
         id: check_files
         run: |
-          if [[ ${{ github.event }} == 'pull_request' ]]; then
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
             echo "::set-output name=current_branch::${GITHUB_HEAD_REF}"
           else
             branch=${GITHUB_REF}
