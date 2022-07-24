@@ -19,15 +19,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
-        fetch-depth: 2
+        fetch-depth: 0
 
     - name: check modified files
       id: check_files
       run: |
           echo "=============== list modified files ==============="
-          git diff --name-only HEAD^ HEAD
+          git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
           echo "========== check paths of modified files =========="
-          git diff --name-only HEAD^ HEAD > files.txt
+          git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > files.txt
           while IFS= read -r file; do
             echo $file
             if [[ $file == src/frontend/* ]]; then
