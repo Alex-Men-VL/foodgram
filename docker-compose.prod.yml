@@ -5,6 +5,7 @@ services:
     <<: &backend
       image: 'almen/foodgram_backend:prod'
       build:
+        target: production_build
         args:
           DJANGO_ENV: production
 

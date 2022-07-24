@@ -76,8 +76,16 @@ RUN chmod +x '/docker-entrypoint.sh'
 
 COPY --from=base --chown=${APP_USER}:${APP_USER} ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --from=base --chown=${APP_USER}:${APP_USER} /usr/local/bin/dockerize /usr/local/bin/dockerize
-COPY --chown=${APP_USER}:${APP_USER} ./src/backend ${APP_ROOT}
 
 USER ${APP_USER}
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+# ---------------------------------------------------------------
+
+FROM development_build AS production_build
+
+ARG APP_ROOT=/code
+ARG APP_USER=web
+
+COPY --chown=${APP_USER}:${APP_USER} ./src/backend ${APP_ROOT}
