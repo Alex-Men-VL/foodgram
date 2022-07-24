@@ -1,0 +1,167 @@
+name: CI for Foodgram
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feature/*'
+    paths:
+      - '**.py'
+      - '**.js'
+      - '**.css'
+
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  check_changes:
+    name: Check changed files
+    outputs:
+      frontend: ${{ steps.check_files.outputs.frontend }}
+      backend: ${{ steps.check_files.outputs.backend }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: check modified files
+        id: check_files
+        run: |
+          echo ${{ github.event.workflow_run }}
+          echo "=============== list modified files ==============="
+          git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
+          echo "========== check paths of modified files =========="
+          git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > files.txt
+          while IFS= read -r file; do
+            echo $file
+            if [[ $file == src/frontend/* ]]; then
+              echo "::set-output name=frontend::true"
+            elif [[ $file == src/backend/* ]]; then
+              echo "::set-output name=backend::true"
+            else
+              echo "file does not belong to any service"
+            fi
+          done < files.txt
+
+  linter:
+    name: Run Flake8
+    needs: check_changes
+    if: needs.check_changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version-file: '.python-version' # Read python version from a file
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
+
+      - name: Run flake8
+        run: poetry run flake8
+
+  tests:
+    name: Run Pytest and MyPy
+    needs: check_changes
+    if: needs.check_changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build the Stack
+        run: DOCKER_BUILDKIT=1 docker-compose build backend
+
+      - name: Run mypy
+        run: docker-compose run --rm backend mypy .
+
+      - name: Run Django Tests
+        run: docker-compose run backend pytest --no-cov
+
+      - name: Tear down the Stack
+        run: docker-compose down
+
+  build_frontend:
+    needs: check_changes
+    name: Build and deploy frontend image
+    if: |
+      needs.check_changes.outputs.frontend == 'true' &&
+      github.event_name == 'push' &&
+      github.head_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build, tag, and push frontend image to Registry
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          CONTAINER: frontend
+          IMAGE_NAME: foodgram_frontend
+          IMAGE_TAG: dev
+        run: |
+          DOCKER_BUILDKIT=1 docker-compose build $CONTAINER
+          docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
+          docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
+
+  build_backend:
+    needs: [check_changes, linter, tests]
+    name: Build and deploy backend image
+    if: |
+      needs.check.outputs.backend == 'true' &&
+      github.event_name == 'push' &&
+      github.head_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Add environment variables to .env
+        # FIX on production
+        run: |
+          echo DJANGO_ENV=development >> .env
+          echo DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} >> .env
+          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+          echo DJANGO_DATABASE_HOST=${{ secrets.DJANGO_DATABASE_HOST }} >> .env
+          echo DJANGO_DATABASE_PORT=${{ secrets.DJANGO_DATABASE_PORT }} >> .env
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build, tag, and push backend image to Registry
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          CONTAINER: backend
+          IMAGE_NAME: foodgram_backend
+          IMAGE_TAG: dev
+        run: |
+          DOCKER_BUILDKIT=1 docker-compose build $CONTAINER
+          docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
+          docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
