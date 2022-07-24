@@ -130,7 +130,7 @@ jobs:
     needs: [check_changes, linter, tests]
     name: Build and deploy backend image
     if: |
-      needs.check.outputs.backend == 'true' &&
+      needs.check_changes.outputs.backend == 'true' &&
       github.event_name == 'push' &&
       github.head_ref == 'main'
     runs-on: ubuntu-latest
