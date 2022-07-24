@@ -25,7 +25,9 @@ services:
     environment:
       DJANGO_ENV: ${DJANGO_ENV-development}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY-REPLACE_ME}
-      DATABASE_URL: ${DATABASE_URL-postgres://foodgram_dev:foodgram@db:5432/foodgram_dev}
+      DJANGO_DATABASE_NAME: ${DJANGO_DATABASE_NAME-foodgram_dev}
+      DJANGO_DATABASE_USER: ${DJANGO_DATABASE_USER-foodgram_dev}
+      DJANGO_DATABASE_PASSWORD: ${DJANGO_DATABASE_PASSWORD-foodgram}
       DJANGO_DATABASE_HOST: ${DJANGO_DATABASE_HOST-db}
       DJANGO_DATABASE_PORT: ${DJANGO_DATABASE_PORT-5432}
     restart: unless-stopped
