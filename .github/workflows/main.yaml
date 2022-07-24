@@ -12,8 +12,8 @@ on:
 
 env:
   CONTAINER_REGISTRY: ghcr.io
-  BACKEND_IMAGE_NAME: ${{ github.repository }}/backend
-  FRONTEND_IMAGE_NAME: ${{ github.repository }}/frontend
+  BACKEND_IMAGE_NAME: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/backend
+  FRONTEND_IMAGE_NAME: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/frontend
 
 
 jobs:
