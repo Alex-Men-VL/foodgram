@@ -28,6 +28,7 @@ jobs:
         id: get_branch_name
         run: |
           echo ${GITHUB_REF}
+
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
             echo "::set-output name=current_branch::${GITHUB_HEAD_REF}"
           else
@@ -43,10 +44,10 @@ jobs:
           echo "=============== list modified files ==============="
           if [[ ${{ github.event.before }} ]]; then
             git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
-          git diff --name-only ${{ github.event.before }} ${{ github.event.after }}  > files.txt
+            git diff --name-only ${{ github.event.before }} ${{ github.event.after }}  > files.txt
           else
             git diff --name-only ${{ github.event.after }}
-          git diff --name-only ${{ github.event.after }} > files.txt
+            git diff --name-only ${{ github.event.after }} > files.txt
           fi
 
           echo "========== check paths of modified files =========="
