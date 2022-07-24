@@ -32,7 +32,6 @@ jobs:
       - name: Get branch name
         id: get_branch_name
         run: |
-          echo ${BACKEND_IMAGE}
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
             echo "::set-output name=current_branch::${GITHUB_HEAD_REF}"
           else
