@@ -18,6 +18,7 @@ jobs:
   check_changes:
     name: Check changed files
     outputs:
+      current_branch: ${{ steps.check_files.outputs.current_branch }}
       frontend: ${{ steps.check_files.outputs.frontend }}
       backend: ${{ steps.check_files.outputs.backend }}
     runs-on: ubuntu-latest
@@ -30,7 +31,7 @@ jobs:
       - name: Check modified files
         id: check_files
         run: |
-          echo ${{ github.event_name }} ${GITHUB_REF##*/} ${{ github.ref }}
+          echo "::set-output name=current_branch::${GITHUB_REF##*/}"
           echo "=============== list modified files ==============="
           git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
           echo "========== check paths of modified files =========="
@@ -101,7 +102,7 @@ jobs:
     if: |
       needs.check_changes.outputs.frontend == 'true' &&
       github.event_name == 'push' &&
-      github.head_ref == 'main'
+      needs.check_changes.outputs.current_branch == 'main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -132,7 +133,7 @@ jobs:
     if: |
       needs.check_changes.outputs.backend == 'true' &&
       github.event_name == 'push' &&
-      github.head_ref == 'main'
+      needs.check_changes.outputs.current_branch == 'main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
