@@ -30,7 +30,7 @@ jobs:
       - name: check modified files
         id: check_files
         run: |
-          echo ${{ github.event.workflow_run }}
+          echo ${{ github.event_name }} ${{ github.head_ref }}
           echo "=============== list modified files ==============="
           git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
           echo "========== check paths of modified files =========="
