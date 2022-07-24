@@ -5,43 +5,16 @@ on:
     branches:
       - 'main'
       - 'feature/*'
+    paths:
+      - '**.py'
 
   pull_request:
     types:
       - closed
 
 jobs:
-  check:
-    name: Check changed .py files
-    outputs:
-      py_changed: ${{ steps.check_files.outputs.py_changed }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: check modified files
-        id: check_files
-        run: |
-          echo "=============== list modified files ==============="
-          git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
-          echo "========== check paths of modified files =========="
-          git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > files.txt
-          while IFS= read -r file; do
-            echo $file
-            if [[ $file == *.py ]]; then
-              echo "::set-output name=py_changed::true"
-            else
-              echo "file does not belong to python"
-            fi
-          done < files.txt
-
   linter:
-    needs: check
     name: Run Flake8
-    if: needs.check.outputs.py_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -64,9 +37,7 @@ jobs:
         run: poetry run flake8
 
   tests:
-    needs: check
     name: Run Pytest and MyPy
-    if: needs.check.outputs.py_changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -76,7 +47,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Build the Stack
-        run: DOCKER_BUILDKIT=1 docker-compose build
+        run: DOCKER_BUILDKIT=1 docker-compose build backend
 
       - name: Run mypy
         run: docker-compose run --rm backend mypy .

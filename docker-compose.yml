@@ -33,7 +33,6 @@ services:
     restart: unless-stopped
     depends_on:
       - db
-      - frontend
 
   frontend:
     image: foodgram_frontend
