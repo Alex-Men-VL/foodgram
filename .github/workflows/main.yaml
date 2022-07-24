@@ -5,10 +5,6 @@ on:
     branches:
       - 'main'
       - 'feature/*'
-    paths:
-      - '**.py'
-      - '**.js'
-      - '**.css'
 
   pull_request:
     types:
@@ -28,9 +24,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check modified files
-        id: check_files
+      - name: Get branch name
+        if: get_branch_name
         run: |
+          echo GITHUB_HEAD_REF
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
             echo "::set-output name=current_branch::${GITHUB_HEAD_REF}"
           else
@@ -39,6 +36,10 @@ jobs:
             current_branch=${branch#"$prefix"}
             echo "::set-output name=current_branch::${current_branch}"
           fi
+
+      - name: Check modified files
+        id: check_files
+        run: |
           echo "=============== list modified files ==============="
           git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
           echo "========== check paths of modified files =========="
