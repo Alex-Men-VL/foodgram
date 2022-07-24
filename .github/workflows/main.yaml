@@ -12,9 +12,8 @@ on:
 
 env:
   CONTAINER_REGISTRY: ghcr.io
-  BACKEND_IMAGE_NAME: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/backend
-  FRONTEND_IMAGE_NAME: $(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/frontend
-
+  BACKEND_IMAGE: ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/backend
+  FRONTEND_IMAGE: ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/frontend
 
 jobs:
   check_changes:
@@ -132,14 +131,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      - name: Set environment variables
+        run: |
+          echo "FRONTEND_IMAGE=$(echo ${{env.FRONTEND_IMAGE}} )" >> $GITHUB_ENV
+
+      - name: Pull images
+        run: |
+          docker pull ${{ env.FRONTEND_IMAGE }} || true
+
       - name: Build, tag, and push frontend image to Registry
         env:
           CONTAINER: frontend
-          IMAGE_NAME: foodgram_frontend
+          IMAGE_NAME: ${{ env.FRONTEND_IMAGE }}
         run: |
           DOCKER_BUILDKIT=1 docker-compose build $CONTAINER
-          docker tag $IMAGE_NAME $CONTAINER_REGISTRY/$FRONTEND_IMAGE_NAME
-          docker push $CONTAINER_REGISTRY/$FRONTEND_IMAGE_NAME
+          docker push $IMAGE_NAME
 
   build_backend:
     needs: [check_changes, linter, tests]
@@ -173,12 +179,18 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build, tag, and push backend image to Registry
+      - name: Set environment variables
+        run: |
+          echo "BACKEND_IMAGE=$(echo ${{env.BACKEND_IMAGE}} )" >> $GITHUB_ENV
+
+      - name: Pull images
+        run: |
+          docker pull ${{ env.BACKEND_IMAGE }} || true
+
+      - name: Build and push backend image to Registry
         env:
           CONTAINER: backend
-          IMAGE_NAME: foodgram_backend
-          IMAGE_TAG: dev
+          IMAGE_NAME: ${{ env.BACKEND_IMAGE }}
         run: |
           DOCKER_BUILDKIT=1 docker-compose build $CONTAINER
-          docker tag $IMAGE_NAME:$IMAGE_TAG $CONTAINER_REGISTRY/$BACKEND_IMAGE_NAME
-          docker push $CONTAINER_REGISTRY/$BACKEND_IMAGE_NAME
+          docker push $IMAGE_NAME

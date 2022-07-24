@@ -3,11 +3,13 @@ services:
 #  caddy:
   backend:
     <<: &backend
-      image: 'almen/foodgram_backend:prod'
+      image: "${BACKEND_IMAGE-foodgram_backend:prod}"
       build:
         target: production_build
         args:
           DJANGO_ENV: production
+        cache_from:
+          - "${BACKEND_IMAGE-foodgram_backend:prod}"
 
     expose:
       - 8000
