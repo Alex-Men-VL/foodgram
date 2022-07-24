@@ -27,12 +27,7 @@ jobs:
         run: poetry install --no-interaction
 
       - name: Run flake8
-        run: flake8 .
-
-      - name: Run mypy
-        run: |
-          cd src/backend
-          mypy .
+        run: poetry run flake8
 
   pytest:
     runs-on: ubuntu-latest
@@ -40,11 +35,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build the Stack
-        run: docker-compose build
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Run DB Migrations
-        run: docker-compose run --rm backend ./manage.py migrate
+      - name: Build the Stack
+        run: DOCKER_BUILDKIT=1 docker-compose build
+
+      - name: Run mypy
+        run: docker-compose run --rm backend mypy .
 
       - name: Run Django Tests
         run: docker-compose run backend pytest
