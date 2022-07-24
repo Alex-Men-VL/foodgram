@@ -4,7 +4,7 @@ omit =
     *migrations*,
     *tests*,
     *__init__*,
-    *settings*
+    *config*
 plugins =
     django_coverage_plugin
 
