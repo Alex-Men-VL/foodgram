@@ -102,10 +102,10 @@ jobs:
         run: DOCKER_BUILDKIT=1 BACKEND_IMAGE=foodgram_backend docker-compose build backend
 
       - name: Run mypy
-        run: docker-compose run --rm backend mypy .
+        run: BACKEND_IMAGE=foodgram_backend docker-compose run --rm backend mypy .
 
       - name: Run Django Tests
-        run: docker-compose run backend pytest --no-cov
+        run: BACKEND_IMAGE=foodgram_backend docker-compose run backend pytest --no-cov
 
       - name: Tear down the Stack
         run: docker-compose down
