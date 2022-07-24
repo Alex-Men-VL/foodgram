@@ -4,7 +4,10 @@ services:
     image: postgres:12.0-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
-    env_file: ./src/backend/.envs/.env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB-foodgram_dev}
+      POSTGRES_USER: ${POSTGRES_USER-foodgram_dev}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD-foodgram}
 
   backend:
     <<: &backend
@@ -14,14 +17,17 @@ services:
         context: .
         dockerfile: ./src/backend/docker/django/Dockerfile
         args:
-          DJANGO_ENV: production
+          DJANGO_ENV: development
     command: bash ./docker/django/gunicorn.sh
     volumes:
       - static_data:/var/www/django/static
       - media_data:/var/www/django/media
-    env_file: ./src/backend/.envs/.env
     environment:
-      DJANGO_DATABASE_HOST: db
+      DJANGO_ENV: ${DJANGO_ENV-development}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY-REPLACE_ME}
+      DATABASE_URL: ${DATABASE_URL-postgres://foodgram_dev:foodgram@db:5432/foodgram_dev}
+      DJANGO_DATABASE_HOST: ${DJANGO_DATABASE_HOST-db}
+      DJANGO_DATABASE_PORT: ${DJANGO_DATABASE_PORT-5432}
     restart: unless-stopped
     depends_on:
       - db

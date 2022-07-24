@@ -1,0 +1,53 @@
+name: Build and Publish Docker Images
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feature/*'
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version-file: '.python-version' # Read python version from a file
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
+
+      - name: Run flake8
+        run: flake8 .
+
+      - name: Run mypy
+        run: |
+          cd src/backend
+          mypy .
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build the Stack
+        run: docker-compose build
+
+      - name: Run DB Migrations
+        run: docker-compose run --rm backend ./manage.py migrate
+
+      - name: Run Django Tests
+        run: docker-compose run backend pytest
+
+      - name: Tear down the Stack
+        run: docker-compose down
