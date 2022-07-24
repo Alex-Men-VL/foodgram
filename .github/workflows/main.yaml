@@ -31,7 +31,13 @@ jobs:
       - name: Check modified files
         id: check_files
         run: |
-          echo "::set-output name=current_branch::${GITHUB_REF##*/}"
+          if [[ ${{ github.event }} == 'pull_request' ]]; then
+            echo "::set-output name=current_branch::${GITHUB_HEAD_REF}"
+          else
+            branch=${GITHUB_REF}
+            prefix='refs/heads/'
+            current_branch=${branch#"$prefix"}
+            echo "::set-output name=current_branch::${current_branch}"
           echo "=============== list modified files ==============="
           git diff --name-only ${{ github.event.before }} ${{ github.event.after }}
           echo "========== check paths of modified files =========="
