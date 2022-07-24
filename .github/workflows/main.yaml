@@ -107,7 +107,7 @@ jobs:
         run: BACKEND_IMAGE=foodgram_backend docker-compose run backend pytest --no-cov
 
       - name: Run Coverage
-        run: BACKEND_IMAGE=foodgram_backend docker-compose run backend coverage xml -o ./coverage.xml
+        run: BACKEND_IMAGE=foodgram_backend docker-compose run backend coverage xml -o ./coverage/coverage.xml
 
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v3

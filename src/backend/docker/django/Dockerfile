@@ -50,6 +50,7 @@ ARG APP_ROOT=/code
 ARG APP_USER=web
 ARG UID=1000
 ARG GID=1000
+ARG COVERAGE_DIR=/code/coverage
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -69,7 +70,10 @@ RUN groupadd -g "${GID}" -r ${APP_USER} \
     && chown ${APP_USER}:${APP_USER} '/var/www/django/static' '/var/www/django/media' \
     # Directory with reqs
     && mkdir -p ${VIRTUAL_ENV} \
-    && chown ${APP_USER}:${APP_USER} ${VIRTUAL_ENV}
+    && chown ${APP_USER}:${APP_USER} ${VIRTUAL_ENV} \
+    # Directory for coverage report
+    && mkdir -p ${COVERAGE_DIR} \
+    && chown ${APP_USER}:${APP_USER} -R ${COVERAGE_DIR}
 
 COPY ./src/backend/docker/django/entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x '/docker-entrypoint.sh'
