@@ -1,10 +1,14 @@
-name: Build and Publish Docker Images
+name: Check code
 
 on:
   push:
     branches:
       - 'main'
       - 'feature/*'
+
+  pull_request:
+    types:
+      - closed
 
 jobs:
   linter:
