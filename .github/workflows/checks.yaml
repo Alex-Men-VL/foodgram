@@ -45,7 +45,7 @@ jobs:
         run: docker-compose run --rm backend mypy .
 
       - name: Run Django Tests
-        run: docker-compose run backend pytest
+        run: docker-compose run backend pytest --no-cov
 
       - name: Tear down the Stack
         run: docker-compose down
