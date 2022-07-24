@@ -10,6 +10,12 @@ on:
     types:
       - closed
 
+env:
+  CONTAINER_REGISTRY: ghcr.io
+  BACKEND_IMAGE_NAME: ${{ github.repository }}/backend
+  FRONTEND_IMAGE_NAME: ${{ github.repository }}/frontend
+
+
 jobs:
   check_changes:
     name: Check changed files
@@ -127,14 +133,12 @@ jobs:
 
       - name: Build, tag, and push frontend image to Registry
         env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           CONTAINER: frontend
           IMAGE_NAME: foodgram_frontend
-          IMAGE_TAG: dev
         run: |
           DOCKER_BUILDKIT=1 docker-compose build $CONTAINER
-          docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
-          docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
+          docker tag $IMAGE_NAME $CONTAINER_REGISTRY/$FRONTEND_IMAGE_NAME
+          docker push $CONTAINER_REGISTRY/$FRONTEND_IMAGE_NAME
 
   build_backend:
     needs: [check_changes, linter, tests]
@@ -169,11 +173,10 @@ jobs:
 
       - name: Build, tag, and push backend image to Registry
         env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           CONTAINER: backend
           IMAGE_NAME: foodgram_backend
           IMAGE_TAG: dev
         run: |
           DOCKER_BUILDKIT=1 docker-compose build $CONTAINER
-          docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
-          docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
+          docker tag $IMAGE_NAME:$IMAGE_TAG $CONTAINER_REGISTRY/$BACKEND_IMAGE_NAME
+          docker push $CONTAINER_REGISTRY/$BACKEND_IMAGE_NAME
