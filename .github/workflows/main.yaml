@@ -14,7 +14,7 @@ jobs:
   check_changes:
     name: Check changed files
     outputs:
-      current_branch: ${{ steps.check_files.outputs.current_branch }}
+      current_branch: ${{ steps.get_branch_name.outputs.current_branch }}
       frontend: ${{ steps.check_files.outputs.frontend }}
       backend: ${{ steps.check_files.outputs.backend }}
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
 
       - name: Get branch name
-        if: get_branch_name
+        id: get_branch_name
         run: |
           echo GITHUB_HEAD_REF
           if [[ ${{ github.event_name }} == 'pull_request' ]]; then
