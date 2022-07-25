@@ -82,7 +82,9 @@ jobs:
         run: BACKEND_IMAGE=foodgram_backend docker-compose run --rm backend mypy .
 
       - name: Run Django Tests
-        run: BACKEND_IMAGE=foodgram_backend docker-compose run --user=root --rm backend pytest --cov .
+        run: |
+          BACKEND_IMAGE=foodgram_backend docker-compose run --user=root --rm backend pytest --cov=./ --cov-report=xml
+          ls -la
 
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v3
