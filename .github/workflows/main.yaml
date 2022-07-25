@@ -61,7 +61,7 @@ jobs:
           done < files.txt
 
   tests:
-    name: Run Pytest and MyPy
+    name: Run tests
     needs: check_changes
     if: needs.check_changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
@@ -82,7 +82,7 @@ jobs:
         run: BACKEND_IMAGE=foodgram_backend docker-compose run --rm backend mypy .
 
       - name: Run Django Tests
-        run: BACKEND_IMAGE=foodgram_backend docker-compose run --user=root --rm backend pytest --cov --cov-report xml
+        run: BACKEND_IMAGE=foodgram_backend docker-compose run --user=root --rm backend pytest --cov .
 
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v3
