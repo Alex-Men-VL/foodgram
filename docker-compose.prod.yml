@@ -1,15 +1,44 @@
 version: '3.8'
 services:
-#  caddy:
+  # Replace with caddy
+  nginx:
+    build:
+      context: .
+      dockerfile: ./src/backend/docker/nginx/Dockerfile
+    image: foodgram_nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./src/frontend/build:/code/frontend/
+      - ./docs/redoc.html:/code/frontend/api/docs/redoc.html
+      - ./docs/openapi-schema.yml:/code/frontend/api/docs/openapi-schema.yml
+      - static_data:/code/admin_panel/static/
+      - media_data:/code/admin_panel/media/
+    depends_on:
+      - backend
+
   backend:
     <<: &backend
-      image: "${BACKEND_IMAGE-foodgram_backend:prod}"
+      image: ${BACKEND_IMAGE}
       build:
         target: production_build
         args:
           DJANGO_ENV: production
         cache_from:
-          - "${BACKEND_IMAGE-foodgram_backend:prod}"
+          - ${BACKEND_IMAGE}
+      environment:
+        DJANGO_ENV: production
 
     expose:
       - 8000
+
+  frontend:
+    <<: &frontend
+      image: ${FRONTEND_IMAGE}
+      build:
+        context: .
+        dockerfile: ./src/frontend/docker/node/Dockerfile
+        cache_from:
+          - ${FRONTEND_IMAGE}
+    volumes:
+      - ./src/frontend:/app/result_build/

@@ -11,7 +11,7 @@ services:
 
   backend:
     <<: &backend
-      image: ${BACKEND_IMAGE-foodgram_backend:dev}
+      image: foodgram_backend
       build:
         target: development_build
         context: .
@@ -19,13 +19,12 @@ services:
         args:
           DJANGO_ENV: development
         cache_from:
-          - ${BACKEND_IMAGE-foodgram_backend:dev}
+          - foodgram_backend
     command: bash ./docker/django/gunicorn.sh
     volumes:
       - static_data:/var/www/django/static
       - media_data:/var/www/django/media
     environment:
-      DJANGO_ENV: ${DJANGO_ENV-development}
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY-REPLACE_ME}
       DJANGO_DATABASE_NAME: ${DJANGO_DATABASE_NAME-foodgram_dev}
       DJANGO_DATABASE_USER: ${DJANGO_DATABASE_USER-foodgram_dev}
@@ -37,12 +36,13 @@ services:
       - db
 
   frontend:
-    image: ${FRONTEND_IMAGE-foodgram_frontend}
-    build:
-      context: .
-      dockerfile: ./src/frontend/docker/node/Dockerfile
-      cache_from:
-        - ${FRONTEND_IMAGE-foodgram_frontend}
+    <<: &frontend
+      image: foodgram_frontend
+      build:
+        context: .
+        dockerfile: ./src/frontend/docker/node/Dockerfile
+        cache_from:
+          - foodgram_frontend
     volumes:
       - ./src/frontend:/app/result_build/
 
