@@ -60,31 +60,6 @@ jobs:
             fi
           done < files.txt
 
-  linter:
-    name: Run Flake8
-    needs: check_changes
-    if: needs.check_changes.outputs.backend == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install poetry
-        run: pipx install poetry
-
-      - name: Set up python
-        id: setup-python
-        uses: actions/setup-python@v4
-        with:
-          python-version-file: '.python-version' # Read python version from a file
-          cache: 'poetry'
-
-      - name: Install dependencies
-        run: poetry install --no-interaction
-
-      - name: Run flake8
-        run: poetry run flake8
-
   tests:
     name: Run Pytest and MyPy
     needs: check_changes
@@ -100,14 +75,14 @@ jobs:
       - name: Build the Stack
         run: DOCKER_BUILDKIT=1 BACKEND_IMAGE=foodgram_backend docker-compose build backend
 
+      - name: Run flake8
+        run: BACKEND_IMAGE=foodgram_backend docker-compose run --rm backend flake8
+
       - name: Run mypy
         run: BACKEND_IMAGE=foodgram_backend docker-compose run --rm backend mypy .
 
       - name: Run Django Tests
-        run: BACKEND_IMAGE=foodgram_backend docker-compose run backend pytest --no-cov
-
-      - name: Run Coverage
-        run: BACKEND_IMAGE=foodgram_backend docker-compose run --user=root backend coverage xml -o ./coverage.xml
+        run: BACKEND_IMAGE=foodgram_backend docker-compose run --user=root --rm backend pytest --cov --cov-report xml
 
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v3
