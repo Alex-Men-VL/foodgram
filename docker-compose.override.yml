@@ -16,6 +16,8 @@ services:
     build:
       context: .
       dockerfile: ./src/backend/docker/nginx/Dockerfile
+      args:
+        DJANGO_ENV: development
     image: foodgram_nginx
     ports:
       - 80:80
