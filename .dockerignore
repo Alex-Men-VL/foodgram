@@ -1,0 +1,5 @@
+*/*/htmlcov
+*/*/.coverage
+*/*/.mypy_cache
+*/*/.pytest_cache
+*/*/*/*/Dockerfile
