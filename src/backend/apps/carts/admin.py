@@ -9,7 +9,7 @@ class RecipeInline(admin.TabularInline):
     fields = ('recipe',)
     raw_id_fields = ('recipe',)
     verbose_name = 'Рецепт'
-    verbose_name_plural = 'Покупки'
+    verbose_name_plural = 'Покупки test'
 
 
 @admin.register(Cart)
