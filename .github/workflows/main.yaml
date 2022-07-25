@@ -82,9 +82,7 @@ jobs:
         run: BACKEND_IMAGE=foodgram_backend docker-compose run --rm backend mypy .
 
       - name: Run Django Tests
-        run: |
-          BACKEND_IMAGE=foodgram_backend docker-compose run --user=root --rm backend pytest --cov=./ --cov-report=xml
-          ls -la
+        run: BACKEND_IMAGE=foodgram_backend docker-compose run --user=root --rm backend pytest --cov=./ --cov-report=xml
 
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v3
@@ -148,9 +146,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add environment variables to .env
-        # FIX on production
         run: |
-          echo DJANGO_ENV=development >> .env
+          echo DJANGO_ENV=production >> .env
           echo DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} >> .env
           echo DJANGO_DATABASE_NAME=${{ secrets.DJANGO_DATABASE_NAME }} >> .env
           echo DJANGO_DATABASE_USER=${{ secrets.DJANGO_DATABASE_USER }} >> .env
@@ -174,5 +171,5 @@ jobs:
           CONTAINER: backend
           IMAGE_NAME: ${{ env.BACKEND_IMAGE }}
         run: |
-          DOCKER_BUILDKIT=1 docker-compose build $CONTAINER
+          DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml -f docker-compose.prod.yml build $CONTAINER
           docker push $IMAGE_NAME
