@@ -130,7 +130,7 @@ jobs:
           docker push $IMAGE_NAME
 
   build_backend:
-    needs: [check_changes, linter, tests]
+    needs: [check_changes, tests]
     name: Build and deploy backend image
     if: |
       needs.check_changes.outputs.backend == 'true' &&
