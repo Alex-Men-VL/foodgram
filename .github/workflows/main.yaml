@@ -73,16 +73,16 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Build the Stack
-        run: DOCKER_BUILDKIT=1 BACKEND_IMAGE=foodgram_backend docker-compose build backend
+        run: DOCKER_BUILDKIT=1 docker-compose build backend
 
       - name: Run flake8
-        run: BACKEND_IMAGE=foodgram_backend docker-compose run --rm backend flake8
+        run: docker-compose run --rm backend flake8
 
       - name: Run mypy
-        run: BACKEND_IMAGE=foodgram_backend docker-compose run --rm backend mypy .
+        run: docker-compose run --rm backend mypy .
 
       - name: Run Django Tests
-        run: BACKEND_IMAGE=foodgram_backend docker-compose run --user=root --rm backend pytest --cov=./ --cov-report=xml
+        run: docker-compose run --user=root --rm backend pytest --cov=./ --cov-report=xml
 
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v3
@@ -135,6 +135,7 @@ jobs:
       github.event_name == 'push' &&
       needs.check_changes.outputs.current_branch == 'main'
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - uses: actions/checkout@v2
 
@@ -144,21 +145,6 @@ jobs:
           registry: ${{ env.CONTAINER_REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Add environment variables to .env
-        run: |
-          echo DJANGO_ENV=production >> .env
-          echo DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} >> .env
-          echo DJANGO_DATABASE_NAME=${{ secrets.DJANGO_DATABASE_NAME }} >> .env
-          echo DJANGO_DATABASE_USER=${{ secrets.DJANGO_DATABASE_USER }} >> .env
-          echo DJANGO_DATABASE_PASSWORD=${{ secrets.DJANGO_DATABASE_PASSWORD }} >> .env
-          echo DJANGO_DATABASE_HOST=${{ secrets.DJANGO_DATABASE_HOST }} >> .env
-          echo DJANGO_DATABASE_PORT=${{ secrets.DJANGO_DATABASE_PORT }} >> .env
-
-          echo AWS_S3_ENDPOINT_URL=${{ secrets.AWS_S3_ENDPOINT_URL }} >> .env
-          echo DJANGO_AWS_ACCESS_KEY_ID=${{ secrets.DJANGO_AWS_ACCESS_KEY_ID }} >> .env
-          echo DJANGO_AWS_SECRET_ACCESS_KEY=${{ secrets.DJANGO_AWS_SECRET_ACCESS_KEY }} >> .env
-          echo DJANGO_AWS_STORAGE_BUCKET_NAME=${{ secrets.DJANGO_AWS_STORAGE_BUCKET_NAME }} >> .env
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
