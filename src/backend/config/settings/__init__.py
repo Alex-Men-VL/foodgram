@@ -12,7 +12,6 @@ from split_settings.tools import include
 from split_settings.tools import optional
 
 env = Env()
-env.read_env()
 
 # Monkeypatching Django, so stubs will work for all generics,
 # see: https://github.com/typeddjango/django-stubs

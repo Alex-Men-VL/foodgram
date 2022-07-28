@@ -2,6 +2,7 @@ import logging
 import socket
 import typing
 
+from config.settings.components import env
 from config.settings.components.common import DATABASES
 from config.settings.components.common import INSTALLED_APPS
 from config.settings.components.common import MIDDLEWARE
@@ -9,6 +10,8 @@ from config.settings.components.common import MIDDLEWARE
 # Setting the development status:
 
 DEBUG = True
+
+SECRET_KEY = env.str('DJANGO_SECRET_KEY', 'REPLACE_ME')
 
 ALLOWED_HOSTS = [
     'foodgram',
@@ -34,12 +37,23 @@ INSTALLED_APPS += (
     'extra_checks',
 )
 
-# Static files:
+# STATIC:
 # https://docs.djangoproject.com/en/3.2/ref/settings/#std:setting-STATICFILES_DIRS
+# ------------------------------------------------------------------------------
+
+STATIC_URL = env.str('DJANGO_STATIC_URL', default='/static/')
+STATIC_ROOT = '/var/www/django/static'
 
 STATICFILES_DIRS: typing.List[str] = [
 
 ]
+
+# MEDIA
+# https://docs.djangoproject.com/en/3.2/topics/files/
+# ------------------------------------------------------------------------------
+
+MEDIA_URL = env.str('DJANGO_MEDIA_URL', default='/media/')
+MEDIA_ROOT = '/var/www/django/media'
 
 MIDDLEWARE += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -49,7 +63,10 @@ MIDDLEWARE += (
     'querycount.middleware.QueryCountMiddleware',
 )
 
+# DEBUG-TOOLBAR
 # https://django-debug-toolbar.readthedocs.io/en/stable/installation.html#configure-internal-ips
+# ------------------------------------------------------------------------------
+
 try:  # This might fail on some OS
     INTERNAL_IPS = [
         '{0}.1'.format(ip[:ip.rfind('.')])
@@ -69,6 +86,9 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': 'config.settings._custom_show_toolbar',
 }
 
+# NPlusOne
+# ------------------------------------------------------------------------------
+
 MIDDLEWARE = [  # noqa: WPS440
     'nplusone.ext.django.NPlusOneMiddleware',
 ] + MIDDLEWARE
@@ -80,16 +100,18 @@ NPLUSONE_WHITELIST = [
     {'model': 'admin.*'},
 ]
 
-# django-test-migrations
+# DJANGO-TEST-MIGRATIONS
 # https://github.com/wemake-services/django-test-migrations
+# ------------------------------------------------------------------------------
 
 # Set of badly named migrations to ignore:
 # DTM_IGNORED_MIGRATIONS = frozenset((
 #     (),
 # ))
 
-# django-extra-checks
+# DJANGO-EXTRA-CHECKS
 # https://github.com/kalekseev/django-extra-checks
+# ------------------------------------------------------------------------------
 
 EXTRA_CHECKS = {
     'checks': [

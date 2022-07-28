@@ -1,24 +1,5 @@
 version: '3.8'
 services:
-  # Replace with caddy
-  nginx:
-    build:
-      context: .
-      dockerfile: ./src/backend/docker/nginx/Dockerfile
-      args:
-        DJANGO_ENV: production
-    image: foodgram_nginx
-    ports:
-      - 80:80
-    volumes:
-      - ./src/frontend/build:/code/frontend/
-      - ./docs/redoc.html:/code/frontend/api/docs/redoc.html
-      - ./docs/openapi-schema.yml:/code/frontend/api/docs/openapi-schema.yml
-      - static_data:/code/admin_panel/static/
-      - media_data:/code/admin_panel/media/
-    depends_on:
-      - backend
-
   backend:
     <<: &backend
       image: ${BACKEND_IMAGE}
@@ -30,9 +11,13 @@ services:
           - ${BACKEND_IMAGE}
       environment:
         DJANGO_ENV: production
+        AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL}
+        DJANGO_AWS_ACCESS_KEY_ID: ${DJANGO_AWS_ACCESS_KEY_ID}
+        DJANGO_AWS_SECRET_ACCESS_KEY: ${DJANGO_AWS_SECRET_ACCESS_KEY}
+        DJANGO_AWS_STORAGE_BUCKET_NAME: ${DJANGO_AWS_STORAGE_BUCKET_NAME}
 
-    expose:
-      - 8000
+    ports:
+      - 8000:8000
 
   frontend:
     <<: &frontend

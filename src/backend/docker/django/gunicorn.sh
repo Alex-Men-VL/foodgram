@@ -14,7 +14,6 @@ python ./manage.py collectstatic --noinput
 
 # Start gunicorn:
 # Docs: http://docs.gunicorn.org/en/stable/settings.html
-# Make sure it is in sync with `django/ci.sh` check:
 gunicorn \
   --config python:docker.django.gunicorn_config \
   config.wsgi

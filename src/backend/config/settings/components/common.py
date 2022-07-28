@@ -1,8 +1,7 @@
-from config.settings.components import config
+from config.settings.components import env
 
 from django.utils.translation import gettext_lazy as _
 
-SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -55,12 +54,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DJANGO_DATABASE_NAME'),
-        'USER': config('DJANGO_DATABASE_USER'),
-        'PASSWORD': config('DJANGO_DATABASE_PASSWORD'),
-        'HOST': config('DJANGO_DATABASE_HOST'),
-        'PORT': config('DJANGO_DATABASE_PORT', cast=int),
-        'CONN_MAX_AGE': config('CONN_MAX_AGE', cast=int, default=60),
+        'NAME': env.str('DJANGO_DATABASE_NAME'),
+        'USER': env.str('DJANGO_DATABASE_USER'),
+        'PASSWORD': env.str('DJANGO_DATABASE_PASSWORD'),
+        'HOST': env.str('DJANGO_DATABASE_HOST'),
+        'PORT': env.int('DJANGO_DATABASE_PORT'),
+        'CONN_MAX_AGE': env.int('CONN_MAX_AGE', 60),
         'OPTIONS': {
             'connect_timeout': 10,
             'options': '-c statement_timeout=15000ms',
@@ -70,6 +69,7 @@ DATABASES = {
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
+# ------------------------------------------------------------------------------
 
 LANGUAGE_CODE = 'ru-RU'
 
@@ -91,10 +91,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_URL = config('DJANGO_STATIC_URL', default='/static/')
-# Static root dir is commonly changed in production
-STATIC_ROOT = '/var/www/django/static'
+# ------------------------------------------------------------------------------
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -103,6 +100,7 @@ STATICFILES_FINDERS = (
 
 # Templates
 # https://docs.djangoproject.com/en/3.2/ref/templates/api
+# ------------------------------------------------------------------------------
 
 TEMPLATES = [
     {
@@ -120,13 +118,6 @@ TEMPLATES = [
     },
 ]
 
-# Media files
-# Media root dir is commonly changed in production
-# (see development.py and production.py).
-# https://docs.djangoproject.com/en/3.2/topics/files/
-
-MEDIA_URL = config('DJANGO_MEDIA_URL', default='/media/')
-MEDIA_ROOT = '/var/www/django/media'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
