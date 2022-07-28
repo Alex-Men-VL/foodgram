@@ -28,13 +28,16 @@ _AWS_EXPIRY = 60 * 60 * 24 * 7
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': f'max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate',
 }
-AWS_LOCATION = 'static'
 
 # STATIC
 # ------------------------------------------------------------------------------
 
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'config.utils.storages.StaticRootS3Boto3Storage'
 COLLECTFAST_STRATEGY = 'collectfast.strategies.boto3.Boto3Strategy'
 
 SPA_MANIFEST_FILEPATH = env.str('SPA_MANIFEST_FILEPATH')
 SPA_BASE_URL = env.str('SPA_BASE_URL')
+
+# MEDIA
+# ------------------------------------------------------------------------------
+DEFAULT_FILE_STORAGE = 'config.utils.storages.MediaRootS3Boto3Storage'
