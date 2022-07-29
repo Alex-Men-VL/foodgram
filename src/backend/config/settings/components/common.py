@@ -2,15 +2,19 @@ from config.settings.components import env
 
 from django.utils.translation import gettext_lazy as _
 
+# APPS
+# ------------------------------------------------------------------------------
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
 
+LOCAL_APPS = [
     'apps.users',
     'apps.tags',
     'apps.ingredients',
@@ -19,6 +23,12 @@ INSTALLED_APPS = [
     'apps.subscriptions',
     'apps.carts',
 ]
+
+INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS
+
+# MIDDLEWARE
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -31,7 +41,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Replace in production?
+# AUTHENTICATION
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+# PASSWORDS
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#password-hashers
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -47,9 +66,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# URLS
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
+
 ROOT_URLCONF = 'config.urls'
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+# DATABASES
+# ------------------------------------------------------------------------------
 
 DATABASES = {
     'default': {
@@ -67,7 +93,7 @@ DATABASES = {
     },
 }
 
-# Internationalization
+# INTERNATIONALIZATION
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 # ------------------------------------------------------------------------------
 
@@ -89,7 +115,7 @@ TIME_ZONE = 'Europe/Moscow'
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# STATIC FILES (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 # ------------------------------------------------------------------------------
 
@@ -98,9 +124,9 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-# Templates
-# https://docs.djangoproject.com/en/3.2/ref/templates/api
+# TEMPLATES
 # ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#templates
 
 TEMPLATES = [
     {
@@ -118,7 +144,8 @@ TEMPLATES = [
     },
 ]
 
-
-AUTH_USER_MODEL = 'users.CustomUser'
+# DEFAULT_AUTO_FIELD
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -3,6 +3,9 @@ from config.settings.components.common import INSTALLED_APPS
 
 # Setting the production status:
 
+# GENERAL
+# ------------------------------------------------------------------------------
+
 DEBUG = False
 
 SECRET_KEY = env.str('DJANGO_SECRET_KEY')
@@ -11,6 +14,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'foodgram',
 ]
+
+# THIRD PARTY APPS
+# ------------------------------------------------------------------------------
 
 INSTALLED_APPS += (
     # AWS storage:
@@ -35,9 +41,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 STATICFILES_STORAGE = 'config.utils.storages.StaticRootS3Boto3Storage'
 COLLECTFAST_STRATEGY = 'collectfast.strategies.boto3.Boto3Strategy'
 
-SPA_MANIFEST_FILEPATH = env.str('SPA_MANIFEST_FILEPATH')
-SPA_BASE_URL = env.str('SPA_BASE_URL')
-
 # MEDIA
 # ------------------------------------------------------------------------------
+
 DEFAULT_FILE_STORAGE = 'config.utils.storages.MediaRootS3Boto3Storage'

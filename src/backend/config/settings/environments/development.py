@@ -9,6 +9,9 @@ from config.settings.components.common import MIDDLEWARE
 
 # Setting the development status:
 
+# GENERAL
+# ------------------------------------------------------------------------------
+
 DEBUG = True
 
 SECRET_KEY = env.str('DJANGO_SECRET_KEY', 'REPLACE_ME')
@@ -20,6 +23,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '[::1]',
 ]
+
+# THIRD PARTY APPS
+# ------------------------------------------------------------------------------
 
 INSTALLED_APPS += (
     # Better debug:
@@ -38,7 +44,6 @@ INSTALLED_APPS += (
 )
 
 # STATIC:
-# https://docs.djangoproject.com/en/3.2/ref/settings/#std:setting-STATICFILES_DIRS
 # ------------------------------------------------------------------------------
 
 STATIC_URL = env.str('DJANGO_STATIC_URL', default='/static/')
@@ -49,7 +54,6 @@ STATICFILES_DIRS: typing.List[str] = [
 ]
 
 # MEDIA
-# https://docs.djangoproject.com/en/3.2/topics/files/
 # ------------------------------------------------------------------------------
 
 MEDIA_URL = env.str('DJANGO_MEDIA_URL', default='/media/')
@@ -64,8 +68,8 @@ MIDDLEWARE += (
 )
 
 # DEBUG-TOOLBAR
-# https://django-debug-toolbar.readthedocs.io/en/stable/installation.html#configure-internal-ips
 # ------------------------------------------------------------------------------
+# https://django-debug-toolbar.readthedocs.io/en/stable/installation.html#configure-internal-ips
 
 try:  # This might fail on some OS
     INTERNAL_IPS = [
@@ -88,6 +92,7 @@ DEBUG_TOOLBAR_CONFIG = {
 
 # NPlusOne
 # ------------------------------------------------------------------------------
+# https://github.com/jmcarp/nplusone
 
 MIDDLEWARE = [  # noqa: WPS440
     'nplusone.ext.django.NPlusOneMiddleware',
@@ -101,8 +106,8 @@ NPLUSONE_WHITELIST = [
 ]
 
 # DJANGO-TEST-MIGRATIONS
-# https://github.com/wemake-services/django-test-migrations
 # ------------------------------------------------------------------------------
+# https://github.com/wemake-services/django-test-migrations
 
 # Set of badly named migrations to ignore:
 # DTM_IGNORED_MIGRATIONS = frozenset((
@@ -110,8 +115,8 @@ NPLUSONE_WHITELIST = [
 # ))
 
 # DJANGO-EXTRA-CHECKS
-# https://github.com/kalekseev/django-extra-checks
 # ------------------------------------------------------------------------------
+# https://github.com/kalekseev/django-extra-checks
 
 EXTRA_CHECKS = {
     'checks': [
@@ -139,7 +144,9 @@ EXTRA_CHECKS = {
     ],
 }
 
+# DATABASES
 # Disable persistent DB connections
+# ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/3.2/ref/databases/#caveats
 
 DATABASES['default']['CONN_MAX_AGE'] = 0
