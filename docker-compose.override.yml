@@ -11,13 +11,11 @@ services:
       - ./src/backend:/code
       - ./data:/data
 
-  # In production going to use caddy
+  # In production uses caddy
   nginx:
     build:
       context: .
-      dockerfile: ./src/backend/docker/nginx/Dockerfile
-      args:
-        DJANGO_ENV: development
+      dockerfile: ./src/backend/docker/server/development/Dockerfile
     image: foodgram_nginx
     ports:
       - 80:80

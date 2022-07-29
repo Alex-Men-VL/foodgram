@@ -1,5 +1,24 @@
 version: '3.8'
 services:
+  caddy:
+    image: caddy:2.5.2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Caddy specific urls
+      - ./src/backend/docker/server/production/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+      # Front
+      - ./src/frontend/build:/code/frontend/
+      # Api-schema
+      - ./docs/redoc.html:/code/frontend/api/docs/redoc.html
+      - ./docs/openapi-schema.yml:/code/frontend/api/docs/openapi-schema.yml
+    depends_on:
+      - backend
+
   backend:
     <<: &backend
       image: ${BACKEND_IMAGE}
@@ -16,9 +35,6 @@ services:
         DJANGO_AWS_SECRET_ACCESS_KEY: ${DJANGO_AWS_SECRET_ACCESS_KEY}
         DJANGO_AWS_STORAGE_BUCKET_NAME: ${DJANGO_AWS_STORAGE_BUCKET_NAME}
 
-    ports:
-      - 8000:8000
-
   frontend:
     <<: &frontend
       image: ${FRONTEND_IMAGE}
@@ -29,3 +45,7 @@ services:
           - ${FRONTEND_IMAGE}
     volumes:
       - ./src/frontend:/app/result_build/
+
+volumes:
+  caddy_data:
+  caddy_config:
