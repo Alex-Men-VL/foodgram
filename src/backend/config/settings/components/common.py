@@ -27,6 +27,7 @@ LOCAL_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
+    'djoser',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -166,4 +167,16 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+# DJOSER
+# -------------------------------------------------------------------------------
+# djoser - https://djoser.readthedocs.io/en/latest/settings.html
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'SERIALIZERS': {
+        'user': 'apps.users.api.serializers.UserSerializer',
+        'user_create': 'apps.users.api.serializers.CustomUserCreateSerializer',
+        'current_user': 'apps.users.api.serializers.UserSerializer',
+    },
 }
