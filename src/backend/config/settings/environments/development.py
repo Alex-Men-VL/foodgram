@@ -94,16 +94,16 @@ DEBUG_TOOLBAR_CONFIG = {
 # ------------------------------------------------------------------------------
 # https://github.com/jmcarp/nplusone
 
-MIDDLEWARE = [  # noqa: WPS440
-    'nplusone.ext.django.NPlusOneMiddleware',
-] + MIDDLEWARE
-
-NPLUSONE_RAISE = True  # comment out if you want to allow N+1 requests
-NPLUSONE_LOGGER = logging.getLogger('nplusone')
-NPLUSONE_LOG_LEVEL = logging.WARN
-NPLUSONE_WHITELIST = [
-    {'model': 'admin.*'},
-]
+# MIDDLEWARE = [  # noqa: WPS440
+#     'nplusone.ext.django.NPlusOneMiddleware',
+# ] + MIDDLEWARE
+#
+# NPLUSONE_RAISE = True  # comment out if you want to allow N+1 requests
+# NPLUSONE_LOGGER = logging.getLogger('nplusone')
+# NPLUSONE_LOG_LEVEL = logging.WARN
+# NPLUSONE_WHITELIST = [
+#     {'model': 'admin.*'},
+# ]
 
 # DJANGO-TEST-MIGRATIONS
 # ------------------------------------------------------------------------------
