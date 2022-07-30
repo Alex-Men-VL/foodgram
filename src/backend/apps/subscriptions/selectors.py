@@ -12,15 +12,11 @@ def check_subscription_exist(author_uuid: UUID, user_uuid: UUID) -> bool:
     :return: True, если подписка есть, иначе - False.
     """
 
-    subscription = (
-        Subscription.objects
-        .select_related(
-            'author',
-            'subscriber',
-        )
-        .filter(
-            author__uuid=author_uuid,
-            subscriber__uuid=user_uuid,
-        )
+    subscription = Subscription.objects.select_related(
+        'author',
+        'subscriber',
+    ).filter(
+        author__uuid=author_uuid,
+        subscriber__uuid=user_uuid,
     )
     return subscription.exists()

@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 
+from ...recipes.api.serializers import ShortRecipeSerializer
 from ...subscriptions.selectors import check_subscription_exist
 from ..models import CustomUser as User
 
@@ -59,3 +60,23 @@ class UserSerializer(serializers.ModelSerializer):
             author_uuid=obj.uuid,
             user_uuid=current_user.uuid,
         )
+
+
+class UserSubscriptionSerializer(UserSerializer):
+    """Сериализатор пользователя с его рецептами."""
+
+    recipes = ShortRecipeSerializer(
+        many=True,
+    )
+    recipes_count = serializers.SerializerMethodField()
+
+    class Meta(UserSerializer.Meta):
+        additional_fields = (
+            'recipes',
+            'recipes_count',
+        )
+        fields = UserSerializer.Meta.fields + additional_fields  # type: ignore
+
+    def get_recipes_count(self, obj: User) -> int:
+        """Возвращает общее количество рецептов пользователя."""
+        ...
