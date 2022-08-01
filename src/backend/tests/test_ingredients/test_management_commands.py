@@ -5,7 +5,7 @@ from django.core.management import call_command
 from django.core.management import CommandError
 from django.test import TestCase
 
-from ..models import Ingredient
+from apps.ingredients.models import Ingredient
 
 
 class UploadIngredientsTest(TestCase):

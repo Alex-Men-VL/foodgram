@@ -1,14 +1,14 @@
-from model_bakery import baker
-
 from django.db import IntegrityError
 from django.test import TestCase
 
-from ..models import Ingredient
+from apps.ingredients.models import Ingredient
+
+from ..factories import IngredientFactory
 
 
 class IngredientTest(TestCase):
     def setUp(self) -> None:
-        self.ingredient: Ingredient = baker.make('ingredients.Ingredient')
+        self.ingredient: Ingredient = IngredientFactory()
 
     def test_ingredient_creation(self) -> None:
         """Проверка создания ингредиента и корректность метода __str__."""
@@ -19,13 +19,12 @@ class IngredientTest(TestCase):
             f'{self.ingredient.name}, {self.ingredient.measurement_unit}'.strip(),
         )
 
-    def test_title_unit_unique_together(self) -> None:
-        """Проверка совместной уникальности полей title и unit."""
+    def test_name_measurement_unit_unique_together(self) -> None:
+        """Проверка совместной уникальности полей name и measurement_unit."""
 
         with self.assertRaises(IntegrityError):
-            baker.make(
-                'ingredients.Ingredient',
-                name='Помидор',
+            IngredientFactory.create_batch(
+                name='Сахар',
                 measurement_unit='г',
-                _quantity=2,
+                size=2,
             )
