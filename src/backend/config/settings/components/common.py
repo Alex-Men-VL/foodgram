@@ -180,4 +180,5 @@ DJOSER = {
         'current_user': 'apps.users.api.serializers.UserSerializer',
     },
     'HIDE_USERS': False,
+    'LOGOUT_ON_PASSWORD_CHANGE': True,
 }
