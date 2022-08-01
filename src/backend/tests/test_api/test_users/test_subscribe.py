@@ -54,7 +54,7 @@ class UserViewSetSubscribeTest(
             subscriber=subscriber,
         )
 
-    def test_user_cannot_subscribe_twice(self) -> None:
+    def test_user_cannot_subscribe_twice_on_one_user(self) -> None:
         """Проверка, что пользователь не может повторно подписаться на одного и того же человека"""
 
         login_user(self.client, self.user)
@@ -120,4 +120,27 @@ class UserViewSetSubscribeTest(
         self.assert_instance_does_not_exist(
             Subscription,
             pk=subscription.pk,
+        )
+
+    def test_user_can_unsubscribe_if_no_subscription(self) -> None:
+        """Проверка, что пользователь не может отписаться, если не подписан"""
+
+        login_user(self.client, self.user)
+
+        self.assert_instance_does_not_exist(
+            Subscription,
+            subscriber=self.user,
+            author=self.author,
+        )
+
+        response = self.client.delete(
+            reverse(self.base_url, args=[self.author.pk]),
+        )
+
+        self.assert_status_equal(response, status.HTTP_400_BAD_REQUEST)
+
+        response.render()
+        self.assertEqual(
+            str(response.data['errors']),
+            'Пользователь не был подписан на этого автора',
         )
