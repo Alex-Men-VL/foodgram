@@ -24,8 +24,12 @@ class TagTest(TestCase):
         with self.assertRaises(ValidationError):
             tag.full_clean()
 
-    def test_title_hex_code_unique_together(self) -> None:
-        """Проверка совместной уникальности полей title и hex_code."""
+    def test_name_color_unique_together(self) -> None:
+        """Проверка совместной уникальности полей name и color."""
 
         with self.assertRaises(IntegrityError):
-            TagFactory.create_batch(color='#000000', size=2)
+            TagFactory.create_batch(
+                name='Завтра',
+                color='#FFF000',
+                size=2,
+            )
