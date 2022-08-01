@@ -1,12 +1,9 @@
-from model_bakery import baker
-
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
 
-from apps.users.models import CustomUser
 from apps.subscriptions.models import Subscription
+from apps.users.models import CustomUser
 
 from ..factories import SubscriptionFactory
 from ..factories import UserFactory
