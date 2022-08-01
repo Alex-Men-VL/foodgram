@@ -1,15 +1,13 @@
-from model_bakery import baker
-
 from django.test import TestCase
 
-from ..models import CustomUser
+from apps.users.models import CustomUser
+
+from ...factories import UserFactory
 
 
 class CustomUserTest(TestCase):
     def setUp(self) -> None:
-        self.user: CustomUser = baker.make(
-            'users.CustomUser',
-        )
+        self.user: CustomUser = UserFactory()
 
     def test_user_creation(self) -> None:
         """Проверка создания пользователя и корректность метода __str__."""

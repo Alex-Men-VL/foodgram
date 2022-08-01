@@ -5,7 +5,7 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('config.api_router')),
+    path('api/v1/', include('config.api_router', 'api')),
 ]
 
 if settings.DEBUG:  # pragma: no cover
