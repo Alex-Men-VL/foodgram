@@ -59,6 +59,11 @@ STATICFILES_DIRS: typing.List[str] = [
 MEDIA_URL = env.str('DJANGO_MEDIA_URL', default='/media/')
 MEDIA_ROOT = '/var/www/django/media'
 
+
+# DEBUG-TOOLBAR
+# ------------------------------------------------------------------------------
+# https://django-debug-toolbar.readthedocs.io/en/stable/installation.html#configure-internal-ips
+
 MIDDLEWARE += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 
@@ -66,10 +71,6 @@ MIDDLEWARE += (
     # Prints how many queries were executed, useful for the APIs.
     'querycount.middleware.QueryCountMiddleware',
 )
-
-# DEBUG-TOOLBAR
-# ------------------------------------------------------------------------------
-# https://django-debug-toolbar.readthedocs.io/en/stable/installation.html#configure-internal-ips
 
 try:  # This might fail on some OS
     INTERNAL_IPS = [
@@ -83,10 +84,13 @@ INTERNAL_IPS += ['127.0.0.1', '10.0.2.2']
 
 def _custom_show_toolbar(request) -> bool:
     """Only show the debug toolbar to users with the superuser flag."""
-    return DEBUG
+    # raise ValueError(request.user.is_superuser)
+    return DEBUG and request.user.is_superuser
 
 
 DEBUG_TOOLBAR_CONFIG = {
+    'DISABLE_PANELS': ['debug_toolbar.panels.redirects.RedirectsPanel'],
+    'SHOW_TEMPLATE_CONTEXT': True,
     'SHOW_TOOLBAR_CALLBACK': 'config.settings._custom_show_toolbar',
 }
 
