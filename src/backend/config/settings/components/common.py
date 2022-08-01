@@ -179,4 +179,5 @@ DJOSER = {
         'user_create': 'apps.users.api.serializers.CustomUserCreateSerializer',
         'current_user': 'apps.users.api.serializers.UserSerializer',
     },
+    'HIDE_USERS': False,
 }
