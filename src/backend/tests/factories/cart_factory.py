@@ -8,7 +8,6 @@ from apps.carts.models import Cart
 
 
 class CartFactory(DjangoModelFactory):
-
     class Meta:
         model = Cart
 

@@ -5,15 +5,18 @@ from django.test import TestCase
 from apps.subscriptions.models import Subscription
 from apps.users.models import CustomUser
 
-from ..factories import SubscriptionFactory
-from ..factories import UserFactory
+from ...factories import SubscriptionFactory
+from ...factories import UserFactory
 
 
 class SubscriptionTest(TestCase):
     def setUp(self) -> None:
         self.subscriber: CustomUser = UserFactory()
         self.author: CustomUser = UserFactory()
-        self.subscription: Subscription = SubscriptionFactory(subscriber=self.subscriber, author=self.author)
+        self.subscription: Subscription = SubscriptionFactory(
+            subscriber=self.subscriber,
+            author=self.author,
+        )
 
     def test_subscription_creation(self) -> None:
         """Проверка создания подписки и корректность метода __str__."""

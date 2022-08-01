@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from apps.tags.models import Tag
 
-from ..factories import TagFactory
+from ...factories import TagFactory
 
 
 class TagTest(TestCase):

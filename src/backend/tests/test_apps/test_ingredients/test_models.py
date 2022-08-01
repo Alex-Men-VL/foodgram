@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from apps.ingredients.models import Ingredient
 
-from ..factories import IngredientFactory
+from ...factories import IngredientFactory
 
 
 class IngredientTest(TestCase):

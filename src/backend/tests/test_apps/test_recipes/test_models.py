@@ -3,8 +3,8 @@ from django.test import TestCase
 from apps.recipes.models import Recipe
 from apps.users.models import CustomUser
 
-from ..factories import RecipeFactory
-from ..factories import UserFactory
+from ...factories import RecipeFactory
+from ...factories import UserFactory
 
 
 class RecipeTest(TestCase):

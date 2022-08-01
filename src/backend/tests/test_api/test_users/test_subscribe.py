@@ -8,25 +8,26 @@ from apps.subscriptions.models import Subscription
 from apps.users.api.serializers import UserSubscriptionSerializer
 from apps.users.models import CustomUser
 
-from ..factories import login_user
-from ..factories import UserFactory
+from ...factories import login_user
+from ...factories import UserFactory
 
 
-class BaseUserViewSetTest(APITestCase, assertions.StatusCodeAssertionsMixin):
+class UserViewSetSubscribeTest(
+    APITestCase, assertions.StatusCodeAssertionsMixin,
+):
     def setUp(self) -> None:
         super().setUp()
         self.user: CustomUser = UserFactory()
         self.author: CustomUser = UserFactory()
         self.base_url = 'api:users-subscribe'
 
-
-class UserViewSetSubscribeTest(BaseUserViewSetTest):
-
     def test_successful_subscribe_with_status_201(self) -> None:
         """Проверка успешного оформления подписки"""
 
         login_user(self.client, self.user)
-        response = self.client.get(reverse('api:users-subscribe', args=[self.author.pk]))
+        response = self.client.get(
+            reverse(self.base_url, args=[self.author.pk]),
+        )
         response.user = self.user
 
         self.assert_status_equal(response, status.HTTP_201_CREATED)
@@ -42,17 +43,23 @@ class UserViewSetSubscribeTest(BaseUserViewSetTest):
 
         subscriptions = Subscription.objects.all()
         self.assertEqual(subscriptions.count(), 1)
-        self.assertTrue(subscriptions.filter(author=author, subscriber=subscriber).exists())
+        self.assertTrue(
+            subscriptions.filter(author=author, subscriber=subscriber).exists(),
+        )
 
     def test_unsuccessful_subscribe_with_status_400(self) -> None:
         """Проверка неудачного оформления подписки со статусом 400 (ошибка подписки)."""
 
         login_user(self.client, self.user)
 
-        response = self.client.get(reverse('api:users-subscribe', args=[self.author.pk]))
+        response = self.client.get(
+            reverse('api:users-subscribe', args=[self.author.pk]),
+        )
         self.assert_status_equal(response, status.HTTP_201_CREATED)
 
-        response = self.client.get(reverse('api:users-subscribe', args=[self.author.pk]))
+        response = self.client.get(
+            reverse('api:users-subscribe', args=[self.author.pk]),
+        )
         self.assert_status_equal(response, status.HTTP_400_BAD_REQUEST)
 
         self.assertEqual(Subscription.objects.count(), 1)
@@ -60,7 +67,9 @@ class UserViewSetSubscribeTest(BaseUserViewSetTest):
     def test_unsuccessful_subscribe_with_status_401(self) -> None:
         """Проверка неудачного оформления подписки со статусом 401 (пользователь не авторизован)."""
 
-        response = self.client.get(reverse('api:users-subscribe', args=[self.author.pk]))
+        response = self.client.get(
+            reverse('api:users-subscribe', args=[self.author.pk]),
+        )
         self.assert_status_equal(response, status.HTTP_401_UNAUTHORIZED)
 
         self.assertEqual(Subscription.objects.count(), 0)
@@ -71,8 +80,12 @@ class UserViewSetSubscribeTest(BaseUserViewSetTest):
         login_user(self.client, self.user)
 
         incorrect_user_id = 999
-        response = self.client.get(reverse('api:users-subscribe', args=[incorrect_user_id]))
+        response = self.client.get(
+            reverse('api:users-subscribe', args=[incorrect_user_id]),
+        )
         self.assert_status_equal(response, status.HTTP_404_NOT_FOUND)
 
         self.assertEqual(Subscription.objects.count(), 0)
-        self.assertFalse(CustomUser.objects.filter(pk=incorrect_user_id).exists())
+        self.assertFalse(
+            CustomUser.objects.filter(pk=incorrect_user_id).exists(),
+        )

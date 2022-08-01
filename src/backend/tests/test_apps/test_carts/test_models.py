@@ -3,8 +3,8 @@ from django.test import TestCase
 from apps.carts.models import Cart
 from apps.users.models import CustomUser
 
-from ..factories import CartFactory
-from ..factories import UserFactory
+from ...factories import CartFactory
+from ...factories import UserFactory
 
 
 class CartTest(TestCase):

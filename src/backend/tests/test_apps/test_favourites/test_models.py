@@ -4,16 +4,19 @@ from apps.favourites.models import Favourite
 from apps.recipes.models import Recipe
 from apps.users.models import CustomUser
 
-from ..factories import FavouriteFactory
-from ..factories import RecipeFactory
-from ..factories import UserFactory
+from ...factories import FavouriteFactory
+from ...factories import RecipeFactory
+from ...factories import UserFactory
 
 
 class FavouriteTest(TestCase):
     def setUp(self) -> None:
         self.user: CustomUser = UserFactory()
         self.recipe: Recipe = RecipeFactory(author=self.user)
-        self.favourite: Favourite = FavouriteFactory(author=self.user, recipe=self.recipe)
+        self.favourite: Favourite = FavouriteFactory(
+            author=self.user,
+            recipe=self.recipe,
+        )
 
     def test_favourite_creation(self) -> None:
         """Проверка добавления ингредиента в избранное и корректность метода __str__."""
