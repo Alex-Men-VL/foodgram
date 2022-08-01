@@ -5,3 +5,4 @@ from .recipe_factory import RecipeFactory
 from .tag_factory import TagFactory
 from .user_factory import login_user
 from .user_factory import UserFactory
+from .subscriptions_factory import SubscriptionFactory
