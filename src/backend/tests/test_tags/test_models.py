@@ -1,20 +1,17 @@
-from model_bakery import baker
-
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
 
-from ..models import Tag
+from apps.tags.models import Tag
+
+from ..factories import TagFactory
 
 
 class TagTest(TestCase):
     def setUp(self) -> None:
-        self.tag: Tag = baker.make(
-            'tags.Tag',
-            color='#FFFFFF',
-        )
+        self.tag: Tag = TagFactory()
 
-    def test_ingredient_creation(self) -> None:
+    def test_tag_creation(self) -> None:
         """Проверка создания тега и корректность метода __str__."""
 
         self.assertTrue(isinstance(self.tag, Tag))
@@ -23,10 +20,7 @@ class TagTest(TestCase):
     def test_hex_code_validation(self) -> None:
         """Проверка валидации HEX-кода."""
 
-        tag: Tag = baker.prepare(
-            'tags.Tag',
-            color='#FFFF',
-        )
+        tag: Tag = TagFactory.build(color='red')
         with self.assertRaises(ValidationError):
             tag.full_clean()
 
@@ -34,9 +28,4 @@ class TagTest(TestCase):
         """Проверка совместной уникальности полей title и hex_code."""
 
         with self.assertRaises(IntegrityError):
-            baker.make(
-                'tags.Tag',
-                name='Черный',
-                color='#000000',
-                _quantity=2,
-            )
+            TagFactory.create_batch(color='#000000', size=2)
