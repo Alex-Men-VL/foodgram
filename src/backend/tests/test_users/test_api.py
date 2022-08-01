@@ -8,8 +8,8 @@ from apps.subscriptions.models import Subscription
 from apps.users.api.serializers import UserSubscriptionSerializer
 from apps.users.models import CustomUser
 
-from ...factories import login_user
-from ...factories import UserFactory
+from ..factories import login_user
+from ..factories import UserFactory
 
 
 class BaseUserViewSetTest(APITestCase, assertions.StatusCodeAssertionsMixin):

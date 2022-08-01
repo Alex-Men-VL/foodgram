@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from apps.users.models import CustomUser
 
-from ...factories import UserFactory
+from ..factories import UserFactory
 
 
 class CustomUserTest(TestCase):
