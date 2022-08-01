@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - 'main'
-      - 'feature/*'
 
   pull_request:
+    branches:
+      - 'feature/*'
     types:
-      - closed
+      - opened
 
 env:
   CONTAINER_REGISTRY: ghcr.io
