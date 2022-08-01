@@ -12,7 +12,9 @@ from ...factories import UserFactory
 
 
 class UserViewSetDetailTest(
-    APITestCase, assertions.StatusCodeAssertionsMixin,
+    APITestCase,
+    assertions.StatusCodeAssertionsMixin,
+    assertions.InstanceAssertionsMixin,
 ):
     def setUp(self) -> None:
         super().setUp()
@@ -70,6 +72,4 @@ class UserViewSetDetailTest(
         )
 
         self.assert_status_equal(response, status.HTTP_404_NOT_FOUND)
-        self.assertFalse(
-            CustomUser.objects.filter(pk=incorrect_user_id).exists(),
-        )
+        self.assert_instance_does_not_exist(CustomUser, pk=incorrect_user_id)
