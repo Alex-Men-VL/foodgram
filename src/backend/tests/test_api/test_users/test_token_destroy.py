@@ -44,7 +44,9 @@ class TokenDestroyViewTest(
         self.assertEqual(response.data, None)
         self.assertTrue(self.signal_sent)
 
-    def test_post_should_deny_logging_out_when_user_not_logged_in(self) -> None:
+    def test_post_should_deny_logging_out_when_user_not_logged_in(
+        self,
+    ) -> None:
         """Проверка неудачного запроса, не пользователь не авторизован"""
 
         response = self.client.post(reverse(self.base_url))

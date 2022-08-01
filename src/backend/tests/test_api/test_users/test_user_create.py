@@ -31,7 +31,10 @@ class UserViewSetCreateTest(
             'password': user.password,
         }
 
-        self.assert_instance_does_not_exist(get_user_model(), username=data['username'])
+        self.assert_instance_does_not_exist(
+            get_user_model(),
+            username=data['username'],
+        )
         response = self.client.post(
             reverse(self.base_url),
             data,
@@ -39,7 +42,10 @@ class UserViewSetCreateTest(
         self.assert_status_equal(response, status.HTTP_201_CREATED)
 
         self.assertTrue('password' not in response.data)
-        self.assert_instance_exists(get_user_model(), username=data['username'])
+        self.assert_instance_exists(
+            get_user_model(),
+            username=data['username'],
+        )
 
         user = CustomUser.objects.get(username=data['username'])
         self.assertTrue(user.check_password(data['password']))
@@ -57,7 +63,10 @@ class UserViewSetCreateTest(
             'password': user.password,
         }
 
-        self.assert_instance_exists(get_user_model(), username=data['username'])
+        self.assert_instance_exists(
+            get_user_model(),
+            username=data['username'],
+        )
         response = self.client.post(
             reverse(self.base_url),
             data,
@@ -78,7 +87,10 @@ class UserViewSetCreateTest(
             'last_name': user.last_name,
             'password': '123',
         }
-        self.assert_instance_does_not_exist(get_user_model(), username=data['username'])
+        self.assert_instance_does_not_exist(
+            get_user_model(),
+            username=data['username'],
+        )
 
         response = self.client.post(
             reverse(self.base_url),

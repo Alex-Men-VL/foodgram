@@ -12,7 +12,8 @@ from ...factories import UserFactory
 
 
 class UserViewSetMeTest(
-    APITestCase, assertions.StatusCodeAssertionsMixin,
+    APITestCase,
+    assertions.StatusCodeAssertionsMixin,
 ):
     def setUp(self) -> None:
         super().setUp()

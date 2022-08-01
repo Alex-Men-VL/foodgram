@@ -13,7 +13,9 @@ from ...factories import UserFactory
 
 
 class UserViewSetSubscribeTest(
-    APITestCase, assertions.StatusCodeAssertionsMixin,
+    APITestCase,
+    assertions.StatusCodeAssertionsMixin,
+    assertions.InstanceAssertionsMixin,
 ):
     def setUp(self) -> None:
         super().setUp()
@@ -43,8 +45,10 @@ class UserViewSetSubscribeTest(
 
         subscriptions = Subscription.objects.all()
         self.assertEqual(subscriptions.count(), 1)
-        self.assertTrue(
-            subscriptions.filter(author=author, subscriber=subscriber).exists(),
+        self.assert_instance_exists(
+            Subscription,
+            author=author,
+            subscriber=subscriber,
         )
 
     def test_unsuccessful_subscribe_with_status_400(self) -> None:

@@ -32,7 +32,10 @@ class UserViewSetCreateTest(
 
         login_user(self.client, user)
 
-        data = {'new_password': 'new_secret_password', 'current_password': 'secret_password'}
+        data = {
+            'new_password': 'new_secret_password',
+            'current_password': 'secret_password',
+        }
         response = self.client.post(
             reverse(self.base_url),
             data,
@@ -50,7 +53,10 @@ class UserViewSetCreateTest(
 
         login_user(self.client, user)
 
-        data = {'new_password': 'new_secret_password', 'current_password': 'secret_password'}
+        data = {
+            'new_password': 'new_secret_password',
+            'current_password': 'secret_password',
+        }
         response = self.client.post(
             reverse(self.base_url),
             data,
