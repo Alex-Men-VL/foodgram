@@ -1,22 +1,23 @@
-from uuid import UUID
+from django.db.models.query import QuerySet
 
-from .models import Subscription
+from ..users.models import CustomUser
 
 
-def check_subscription_exist(author_uuid: UUID, user_uuid: UUID) -> bool:
-    """Проверка наличия подписки на пользователя.
+def get_user_subscriptions_authors(
+    user: CustomUser,
+) -> 'QuerySet[CustomUser]':
+    """Возвращает список пользователей, на которых подписан пользователь
 
-    :param author_uuid: UUID пользователя, наличие подписки на которого проверяется.
-    :param user_uuid: UUID пользователя, у которого проверяется наличие подписки.
-
-    :return: True, если подписка есть, иначе - False.
+    :return: `QuerySet` объектов `CustomUser`, на которых подписан текущий пользователь
     """
 
-    subscription = Subscription.objects.select_related(
-        'author',
-        'subscriber',
-    ).filter(
-        author__uuid=author_uuid,
-        subscriber__uuid=user_uuid,
+    subscriptions = user.subscriptions.all()
+    subscriptions_authors = subscriptions.values_list('author', flat=True)
+
+    authors = (
+        CustomUser.objects.filter(pk__in=subscriptions_authors)
+        .get_with_recipes()
+        .get_with_recipes_count()
+        .set_default_subscription_status(is_subscribed=True)
     )
-    return subscription.exists()
+    return authors
