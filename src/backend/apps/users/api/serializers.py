@@ -27,7 +27,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 class UserSerializer(serializers.ModelSerializer):
     """Сериализатор пользователя."""
 
-    is_subscribed = serializers.SerializerMethodField(
+    is_subscribed: serializers.Field = serializers.SerializerMethodField(
         method_name='check_subscription',
         read_only=True,
     )
@@ -56,7 +56,7 @@ class UserSerializer(serializers.ModelSerializer):
             obj, 'is_subscribed',
         ), 'У QuerySet не вызван метод get_with_subscription_status'
 
-        return obj.is_subscribed
+        return obj.is_subscribed  # type: ignore
 
 
 class UserSubscriptionSerializer(UserSerializer):
@@ -86,7 +86,7 @@ class UserSubscriptionSerializer(UserSerializer):
             obj, 'recipes_count',
         ), 'У QuerySet не вызван метод get_with_recipes_count'
 
-        return obj.recipes_count
+        return obj.recipes_count  # type: ignore
 
 
 class CurrentUserSerializer(UserSerializer):
