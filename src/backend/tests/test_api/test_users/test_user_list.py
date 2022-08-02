@@ -45,12 +45,12 @@ class UserViewSetListTest(
         total_users_number = CustomUser.objects.count()
         self.assertEqual(total_users_number, 2)
 
-        current_user = CustomUser.objects.get(pk=self.current_user.pk)
-        user = CustomUser.objects.get(pk=self.user.pk)
+        users = CustomUser.objects.get_with_subscription_status(
+            subscriber_id=self.current_user,
+        ).all()
 
         serializer = UserSerializer(
-            (current_user, user),
-            context={'request': response},
+            users,
             many=True,
         )
 

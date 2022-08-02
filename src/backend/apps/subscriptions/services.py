@@ -1,25 +1,15 @@
 import typing
-from uuid import UUID
 
-from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
-
+from ..users.models import CustomUser
 from .models import Subscription
-
-CustomUser = get_user_model()
 
 
 class SubscriptionService:
-    """Сервис для изменения подписки на автора.
+    """Сервис для изменения подписки на автора"""
 
-    Сервис инкапсулирует два публичных метода:
-      - Добавление подписки на автора;
-      - Удаление подписки на автора.
-    """
-
-    def __init__(self, author_uuid: UUID, subscriber_uuid: UUID) -> None:
-        self.author = get_object_or_404(CustomUser, uuid=author_uuid)
-        self.subscriber = get_object_or_404(CustomUser, uuid=subscriber_uuid)
+    def __init__(self, author: CustomUser, subscriber: CustomUser) -> None:
+        self.author: CustomUser = author
+        self.subscriber: CustomUser = subscriber
 
     def add_subscription(self) -> typing.Tuple[Subscription, bool]:
         """Добавление подписки на пользователя.

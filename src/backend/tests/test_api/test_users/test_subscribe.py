@@ -36,13 +36,18 @@ class UserViewSetSubscribeTest(
 
         self.assert_status_equal(response, status.HTTP_201_CREATED)
 
-        author = CustomUser.objects.get(pk=self.author.pk)
+        author = (
+            CustomUser.objects.get_with_recipes_count()
+            .get_with_subscription_status(
+                subscriber_id=self.user,
+            )
+            .get(
+                pk=self.author.pk,
+            )
+        )
         subscriber = CustomUser.objects.get(pk=self.user.pk)
 
-        serializer = UserSubscriptionSerializer(
-            author,
-            context={'request': response},
-        )
+        serializer = UserSubscriptionSerializer(author)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.data['is_subscribed'], True)
 

@@ -37,7 +37,7 @@ class UserViewSetDetailTest(
     def test_user_can_get_other_user_detail(self) -> None:
         """Проверка успешного получения профиля пользователя"""
 
-        login_user(self.client, self.user)
+        login_user(self.client, self.current_user)
 
         response = self.client.get(
             reverse(
@@ -45,16 +45,16 @@ class UserViewSetDetailTest(
                 args=[self.user.pk],
             ),
         )
-        response.user = self.current_user
 
         self.assert_status_equal(response, status.HTTP_200_OK)
 
-        user = CustomUser.objects.get(pk=self.user.pk)
-
-        serializer = UserSerializer(
-            user,
-            context={'request': response},
+        user = CustomUser.objects.get_with_subscription_status(
+            subscriber_id=self.current_user,
+        ).get(
+            pk=self.user.pk,
         )
+
+        serializer = UserSerializer(user)
 
         self.assertEqual(response.data, serializer.data)
 

@@ -37,15 +37,14 @@ class UserViewSetMeTest(
         response = self.client.get(
             reverse(self.base_url),
         )
-        response.user = self.user
-
         self.assert_status_equal(response, status.HTTP_200_OK)
 
-        user = CustomUser.objects.get(pk=self.user.pk)
-
-        serializer = UserSerializer(
-            user,
-            context={'request': response},
+        user = CustomUser.objects.get_with_subscription_status(
+            subscriber_id=self.user,
+        ).get(
+            pk=self.user.pk,
         )
+        self.assertEqual(user.is_subscribed, False)
+        serializer = UserSerializer(user)
 
         self.assertEqual(response.data, serializer.data)
