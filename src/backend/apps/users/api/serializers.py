@@ -4,7 +4,6 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 from ...recipes.api.serializers import ShortRecipeSerializer
-from ...subscriptions.selectors import check_subscription_exist
 from ..models import CustomUser as User
 
 CustomUser = get_user_model()
@@ -45,21 +44,19 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def check_subscription(self, obj: User) -> bool:
-        """Проверка подписки на текущего пользователя.
+        """Проверка подписки текущего пользователя на просматриваемого пользователя.
+
+        :param obj: Пользователь, на которого проверяется подписка
 
         :return True: Если пользователь подписан на просматриваемого пользователя;
                 False: Если пользователь не авторизован или просматривает свой профиль или не подписан.
         """
 
-        current_user = self.context.get('request').user  # type: ignore
+        assert hasattr(
+            obj, 'is_subscribed',
+        ), 'У QuerySet не вызван метод get_with_subscription_status'
 
-        if current_user.is_anonymous or current_user == obj:
-            return False
-
-        return check_subscription_exist(
-            author_uuid=obj.uuid,
-            user_uuid=current_user.uuid,
-        )
+        return obj.is_subscribed
 
 
 class UserSubscriptionSerializer(UserSerializer):
@@ -78,5 +75,21 @@ class UserSubscriptionSerializer(UserSerializer):
         fields = UserSerializer.Meta.fields + additional_fields  # type: ignore
 
     def get_recipes_count(self, obj: User) -> int:
-        """Возвращает общее количество рецептов пользователя."""
-        ...
+        """Возвращает общее количество рецептов просматриваемого пользователя
+
+        :param obj: Просматриваемый пользователь
+
+        :return: Количество рецептов пользователя
+        """
+
+        assert hasattr(
+            obj, 'recipes_count',
+        ), 'У QuerySet не вызван метод get_with_recipes_count'
+
+        return obj.recipes_count
+
+
+class CurrentUserSerializer(UserSerializer):
+    """Сериализатор текущего пользователя"""
+
+    is_subscribed = serializers.BooleanField(default=False)
