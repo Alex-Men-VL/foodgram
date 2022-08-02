@@ -53,7 +53,8 @@ class UserSerializer(serializers.ModelSerializer):
         """
 
         assert hasattr(
-            obj, 'is_subscribed',
+            obj,
+            'is_subscribed',
         ), 'У QuerySet не вызван метод get_with_subscription_status'
 
         return obj.is_subscribed  # type: ignore
@@ -83,7 +84,8 @@ class UserSubscriptionSerializer(UserSerializer):
         """
 
         assert hasattr(
-            obj, 'recipes_count',
+            obj,
+            'recipes_count',
         ), 'У QuerySet не вызван метод get_with_recipes_count'
 
         return obj.recipes_count  # type: ignore

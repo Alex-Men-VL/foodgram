@@ -24,7 +24,8 @@ class CustomUserQuerySet(models.QuerySet):
         )
 
     def get_with_subscription_status(
-        self, subscriber_id: int,
+        self,
+        subscriber_id: int,
     ) -> 'QuerySet[CustomUser]':
         """Возвращает пользователей вместе со статусом, является ли переданный пользователь его подписчиком
 
@@ -43,7 +44,8 @@ class CustomUserQuerySet(models.QuerySet):
         )
 
     def set_default_subscription_status(
-        self, is_subscribed: bool,
+        self,
+        is_subscribed: bool,
     ) -> 'QuerySet[CustomUser]':
         """Возвращает пользователей вместе со статусом подписки текущего пользователя, переданным в аргументе
 
