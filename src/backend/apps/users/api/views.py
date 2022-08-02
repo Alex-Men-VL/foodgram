@@ -11,6 +11,7 @@ from django.http import HttpRequest
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 
+from ...subscriptions.selectors import get_user_subscriptions_authors
 from ...subscriptions.services import SubscriptionService
 from ..models import CustomUser
 from .serializers import UserSubscriptionSerializer
@@ -21,6 +22,28 @@ class UserViewSet(DjoserUserViewSet):
 
     queryset = CustomUser.objects.all()
     subscription_serializer_class = UserSubscriptionSerializer
+
+    @action(methods=['get'], detail=False)
+    def subscriptions(
+        self,
+        request: HttpRequest,
+    ) -> HttpResponse:
+        """Эндпоинт для получения пользователей, на которых подписан текущий пользователь"""
+
+        current_user = self.get_instance()
+        subscriptions_authors = get_user_subscriptions_authors(
+            user=current_user,
+        )
+
+        subscription_serializer = self.subscription_serializer_class(
+            subscriptions_authors,
+            context={'request': request},
+            many=True,
+        )
+        return Response(
+            subscription_serializer.data,
+            status=status.HTTP_200_OK,
+        )
 
     @action(methods=['get', 'delete'], detail=True)
     def subscribe(
@@ -85,7 +108,7 @@ class UserViewSet(DjoserUserViewSet):
         )
 
     def get_permissions(self) -> typing.List[typing.Any]:
-        if self.action == 'subscribe':
+        if self.action in {'subscribe', 'subscriptions'}:
             permission_classes = [IsAuthenticated]
         else:
             return super().get_permissions()
