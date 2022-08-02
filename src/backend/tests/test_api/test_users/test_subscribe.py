@@ -36,7 +36,15 @@ class UserViewSetSubscribeTest(
 
         self.assert_status_equal(response, status.HTTP_201_CREATED)
 
-        author = CustomUser.objects.get(pk=self.author.pk)
+        author = (
+            CustomUser.objects.get_with_recipes_count()
+            .get_with_subscription_status(
+                subscriber_id=self.user,
+            )
+            .get(
+                pk=self.author.pk,
+            )
+        )
         subscriber = CustomUser.objects.get(pk=self.user.pk)
 
         serializer = UserSubscriptionSerializer(
