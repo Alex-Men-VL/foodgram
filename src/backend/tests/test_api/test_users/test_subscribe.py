@@ -47,10 +47,7 @@ class UserViewSetSubscribeTest(
         )
         subscriber = CustomUser.objects.get(pk=self.user.pk)
 
-        serializer = UserSubscriptionSerializer(
-            author,
-            context={'request': response},
-        )
+        serializer = UserSubscriptionSerializer(author)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.data['is_subscribed'], True)
 

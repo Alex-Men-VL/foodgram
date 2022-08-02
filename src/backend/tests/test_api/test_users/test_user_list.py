@@ -51,7 +51,6 @@ class UserViewSetListTest(
 
         serializer = UserSerializer(
             users,
-            context={'request': response},
             many=True,
         )
 

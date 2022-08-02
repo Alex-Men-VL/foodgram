@@ -37,7 +37,6 @@ class UserViewSet(DjoserUserViewSet):
 
         subscription_serializer = self.subscription_serializer_class(
             subscriptions_authors,
-            context={'request': request},
             many=True,
         )
         return Response(
@@ -92,7 +91,6 @@ class UserViewSet(DjoserUserViewSet):
         current_author.is_subscribed = True
         subscription_serializer = self.subscription_serializer_class(
             current_author,
-            context={'request': request},
         )
         return Response(
             subscription_serializer.data,
