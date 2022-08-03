@@ -1,12 +1,10 @@
 from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
 
-from django.contrib.auth import get_user_model
+from apps.recipes.api.serializers import ShortRecipeSerializer
 
-from ...recipes.api.serializers import ShortRecipeSerializer
-from ..models import CustomUser as User
-
-CustomUser = get_user_model()
+from . import UserSerializer
+from ...models import CustomUser
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -24,42 +22,6 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         )
 
 
-class UserSerializer(serializers.ModelSerializer):
-    """Сериализатор пользователя."""
-
-    is_subscribed: serializers.Field = serializers.SerializerMethodField(
-        method_name='check_subscription',
-        read_only=True,
-    )
-
-    class Meta:
-        model = CustomUser
-        fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed',
-        )
-
-    def check_subscription(self, obj: User) -> bool:
-        """Проверка подписки текущего пользователя на просматриваемого пользователя.
-
-        :param obj: Пользователь, на которого проверяется подписка
-
-        :return True: Если пользователь подписан на просматриваемого пользователя;
-                False: Если пользователь не авторизован или просматривает свой профиль или не подписан.
-        """
-
-        assert hasattr(
-            obj,
-            'is_subscribed',
-        ), 'У QuerySet не вызван метод get_with_subscription_status'
-
-        return obj.is_subscribed  # type: ignore
-
-
 class UserSubscriptionSerializer(UserSerializer):
     """Сериализатор пользователя с его рецептами."""
 
@@ -75,7 +37,7 @@ class UserSubscriptionSerializer(UserSerializer):
         )
         fields = UserSerializer.Meta.fields + additional_fields  # type: ignore
 
-    def get_recipes_count(self, obj: User) -> int:
+    def get_recipes_count(self, obj: CustomUser) -> int:
         """Возвращает общее количество рецептов просматриваемого пользователя
 
         :param obj: Просматриваемый пользователь
