@@ -3,6 +3,7 @@ from rest_framework.routers import SimpleRouter
 from django.urls import include
 from django.urls import path
 
+from apps.tags.api.views import TagViewSet
 from apps.users.api.views import UserViewSet
 
 app_name = 'api'
@@ -10,6 +11,7 @@ app_name = 'api'
 router = SimpleRouter()
 
 router.register('users', UserViewSet, basename='users')
+router.register('tags', TagViewSet, basename='tags')
 
 urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
