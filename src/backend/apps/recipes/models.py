@@ -79,7 +79,7 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         db_index=True,
     )
-    quantity = models.PositiveIntegerField(
+    amount = models.PositiveIntegerField(
         'Количество',
     )
 
