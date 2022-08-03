@@ -5,6 +5,7 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 
 from apps.subscriptions.models import Subscription
+from apps.subscriptions.selectors import get_user_subscriptions_authors
 from apps.users.api.serializers import UserSubscriptionSerializer
 from apps.users.models import CustomUser
 
@@ -49,16 +50,7 @@ class UserViewSetSubscriptionsTest(
         total_subscriptions_number = self.user.subscriptions.count()
         self.assertEqual(total_subscriptions_number, self.subscriptions_number)
 
-        subscriptions_authors_ids = [
-            subscription.author.id for subscription in self.subscriptions
-        ]
-        authors = (
-            CustomUser.objects.filter(pk__in=subscriptions_authors_ids)
-            .get_with_recipes()
-            .get_with_recipes_count()
-            .get_with_subscription_status(subscriber_id=self.user)
-        )
-
+        authors = get_user_subscriptions_authors(self.user)
         serializer = UserSubscriptionSerializer(
             authors,
             many=True,

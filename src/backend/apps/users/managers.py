@@ -6,13 +6,6 @@ from ..subscriptions.models import Subscription
 
 
 class CustomUserQuerySet(models.QuerySet):
-    def get_with_recipes(self) -> 'QuerySet':
-        """Возвращает пользователей вместе с рецептами"""
-
-        return self.prefetch_related(
-            'recipes',
-        )
-
     def get_with_recipes_count(self) -> 'QuerySet':
         """Возвращает пользователей вместе с количеством их рецептов"""
 

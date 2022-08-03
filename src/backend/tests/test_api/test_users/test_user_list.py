@@ -47,7 +47,7 @@ class UserViewSetListTest(
 
         users = CustomUser.objects.get_with_subscription_status(
             subscriber_id=self.current_user,
-        ).all()
+        )
 
         serializer = UserSerializer(
             users,

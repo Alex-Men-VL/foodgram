@@ -14,6 +14,7 @@ from django.shortcuts import get_object_or_404
 from ...subscriptions.selectors import get_user_subscriptions_authors
 from ...subscriptions.services import SubscriptionService
 from ..models import CustomUser
+from ..selectors import get_users_with_recipes
 from .serializers import UserSubscriptionSerializer
 
 
@@ -53,9 +54,9 @@ class UserViewSet(DjoserUserViewSet):
         """Эндпоинт для добавления или удаления подписки на автора"""
 
         current_user = self.get_instance()
-        authors = self.queryset.get_with_recipes().get_with_recipes_count()
+        users_with_recipes = get_users_with_recipes()
         current_author = get_object_or_404(
-            authors,
+            users_with_recipes,
             pk=id,
         )
 
@@ -88,7 +89,7 @@ class UserViewSet(DjoserUserViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        current_author.is_subscribed = True
+        setattr(current_author, 'is_subscribed', True)  # noqa: B010
         subscription_serializer = self.subscription_serializer_class(
             current_author,
         )

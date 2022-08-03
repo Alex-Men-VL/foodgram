@@ -1,6 +1,7 @@
 from django.db.models.query import QuerySet
 
 from ..users.models import CustomUser
+from ..users.selectors import get_users_with_recipes
 
 
 def get_user_subscriptions_authors(
@@ -14,10 +15,10 @@ def get_user_subscriptions_authors(
     subscriptions = user.subscriptions.all()
     subscriptions_authors = subscriptions.values_list('author', flat=True)
 
+    users_with_recipes = get_users_with_recipes()
     authors = (
-        CustomUser.objects.filter(pk__in=subscriptions_authors)
-        .get_with_recipes()
-        .get_with_recipes_count()
-        .set_default_subscription_status(is_subscribed=True)
+        users_with_recipes
+        .filter(pk__in=subscriptions_authors)
+        .set_default_subscription_status(is_subscribed=True)  # type: ignore
     )
     return authors
