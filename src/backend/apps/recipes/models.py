@@ -3,8 +3,26 @@ import uuid
 from behaviors import behaviors
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core import validators
 from django.db import models
+from django.db.models import QuerySet
+
+CustomUser = get_user_model()
+
+
+class RecipeQuerySet(QuerySet):
+    def get_with_authors_subscription_status(
+        self,
+        subscriber_id: int,
+    ) -> 'QuerySet':
+        """Возвращает рецепты со статусом подписки на автора"""
+
+        authors_prefetch = models.Prefetch(
+            'author',
+            CustomUser.objects.get_with_subscription_status(subscriber_id),
+        )
+        return self.prefetch_related(authors_prefetch)
 
 
 class Recipe(behaviors.Timestamped):
@@ -52,6 +70,8 @@ class Recipe(behaviors.Timestamped):
         ],
         help_text='В минутах.',
     )
+
+    objects = RecipeQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'Рецепт'
