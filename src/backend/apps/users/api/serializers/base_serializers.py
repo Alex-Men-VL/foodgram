@@ -36,4 +36,4 @@ class UserSerializer(serializers.ModelSerializer):
             'is_subscribed',
         ), 'У QuerySet не вызван метод get_with_subscription_status'
 
-        return obj.is_subscribed  # type: ignore
+        return getattr(obj, 'is_subscribed')
