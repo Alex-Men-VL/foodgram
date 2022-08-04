@@ -9,6 +9,8 @@ def get_user_subscriptions_authors(
 ) -> 'QuerySet[CustomUser]':
     """Возвращает список пользователей, на которых подписан пользователь
 
+    :param user: Пользователь
+
     :return: `QuerySet` объектов `CustomUser`, на которых подписан текущий пользователь
     """
 
@@ -16,9 +18,9 @@ def get_user_subscriptions_authors(
     subscriptions_authors = subscriptions.values_list('author', flat=True)
 
     users_with_recipes = get_users_with_recipes()
-    authors = (
-        users_with_recipes
-        .filter(pk__in=subscriptions_authors)
-        .set_default_subscription_status(is_subscribed=True)  # type: ignore
+    authors = users_with_recipes.filter(
+        pk__in=subscriptions_authors,
+    ).set_default_subscription_status(  # type: ignore
+        is_subscribed=True,
     )
     return authors

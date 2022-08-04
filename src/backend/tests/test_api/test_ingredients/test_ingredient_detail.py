@@ -52,4 +52,7 @@ class IngredientViewSetDetailTest(
         )
 
         self.assert_status_equal(response, status.HTTP_404_NOT_FOUND)
-        self.assert_instance_does_not_exist(Ingredient, pk=incorrect_ingredient_id)
+        self.assert_instance_does_not_exist(
+            Ingredient,
+            pk=incorrect_ingredient_id,
+        )

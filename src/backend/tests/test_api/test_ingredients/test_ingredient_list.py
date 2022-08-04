@@ -17,7 +17,9 @@ class IngredientViewSetListTest(
     def setUp(self) -> None:
         super().setUp()
         self.total_ingredients_number = 3
-        self.ingredients: Ingredient = IngredientFactory.create_batch(size=self.total_ingredients_number)
+        self.ingredients: Ingredient = IngredientFactory.create_batch(
+            size=self.total_ingredients_number,
+        )
         self.base_url = 'api:ingredients-list'
 
     def test_user_can_list_ingredients(self) -> None:
@@ -32,7 +34,10 @@ class IngredientViewSetListTest(
         ingredients = Ingredient.objects.all()
         total_ingredients_number = ingredients.count()
 
-        self.assertEqual(total_ingredients_number, self.total_ingredients_number)
+        self.assertEqual(
+            total_ingredients_number,
+            self.total_ingredients_number,
+        )
 
         serializer = IngredientSerializer(
             ingredients,
