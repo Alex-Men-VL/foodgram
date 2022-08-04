@@ -8,6 +8,9 @@ from django.core import validators
 from django.db import models
 from django.db.models import QuerySet
 
+from apps.carts.models import Cart
+from apps.favourites.models import Favourite
+
 CustomUser = get_user_model()
 
 
@@ -23,6 +26,39 @@ class RecipeQuerySet(QuerySet):
             CustomUser.objects.get_with_subscription_status(subscriber_id),
         )
         return self.prefetch_related(authors_prefetch)
+
+    def get_with_favourite_status(
+        self,
+        subscriber_id: int,
+    ) -> 'QuerySet':
+        """Возвращает рецепты со статусом, добавлен ли текущий рецепт в избранное для переданного пользователя"""
+
+        favourites = Favourite.objects.filter(
+            recipe=models.OuterRef('pk'),
+        )
+        return self.annotate(
+            is_favorited=models.Exists(
+                favourites.filter(
+                    user_id=subscriber_id,
+                ),
+            ),
+        )
+
+    def get_with_is_in_shopping_cart_status(
+        self,
+        subscriber_id: int,
+    ) -> 'QuerySet':
+        """Возвращает рецепты со статусом, добавлен ли текущий рецепт в список покупок для переданного пользователя"""
+
+        user_cart = Cart.objects.filter(
+            owner_id=subscriber_id,
+            recipes=models.OuterRef('pk'),
+        )
+        return self.annotate(
+            is_in_shopping_cart=models.Exists(
+                user_cart,
+            ),
+        )
 
 
 class Recipe(behaviors.Timestamped):
