@@ -50,7 +50,7 @@ class UserSubscriptionSerializer(UserSerializer):
             'recipes_count',
         ), 'У QuerySet не вызван метод get_with_recipes_count'
 
-        return obj.recipes_count  # type: ignore
+        return getattr(obj, 'recipes_count')
 
 
 class CurrentUserSerializer(UserSerializer):
