@@ -5,7 +5,7 @@ from django.db.models import QuerySet
 from ..subscriptions.models import Subscription
 
 
-class CustomUserQuerySet(models.QuerySet):
+class CustomUserQuerySet(QuerySet):
     def get_with_recipes_count(self) -> 'QuerySet':
         """Возвращает пользователей вместе с количеством их рецептов"""
 
