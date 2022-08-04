@@ -1,8 +1,10 @@
 from collections import OrderedDict
 
 from rest_framework import serializers
+from rest_framework.fields import Field
 
 from apps.ingredients.api.serializers import IngredientSerializer
+from apps.ingredients.models import Ingredient
 
 from ...models import Recipe
 from ...models import RecipeIngredient
@@ -23,8 +25,8 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
         )
 
 
-class RecipeIngredientFlatSerializer(serializers.ModelSerializer):
-    """Сериализатор ингредиента в рецепте"""
+class RecipeIngredientFlatRetrieveSerializer(serializers.ModelSerializer):
+    """Сериализатор получения ингредиента в рецепте"""
 
     ingredient = IngredientSerializer()
 
@@ -43,3 +45,19 @@ class RecipeIngredientFlatSerializer(serializers.ModelSerializer):
             representation[key] = ingredient_representation[key]
 
         return representation
+
+
+class RecipeIngredientFlatCreateSerializer(serializers.ModelSerializer):
+    """Сериализатор добавления ингредиента в рецепт"""
+
+    id: Field = serializers.PrimaryKeyRelatedField(
+        queryset=Ingredient.objects.all(),
+        source='ingredient',
+    )
+
+    class Meta:
+        model = RecipeIngredient
+        fields = (
+            'id',
+            'amount',
+        )
