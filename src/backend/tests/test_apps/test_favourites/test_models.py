@@ -14,18 +14,18 @@ class FavouriteTest(TestCase):
         self.user: CustomUser = UserFactory()
         self.recipe: Recipe = RecipeFactory(author=self.user)
         self.favourite: Favourite = FavouriteFactory(
-            author=self.user,
+            user=self.user,
             recipe=self.recipe,
         )
 
     def test_favourite_creation(self) -> None:
         """Проверка добавления ингредиента в избранное и корректность метода __str__."""
 
-        self.assertEqual(self.favourite.author, self.user)
+        self.assertEqual(self.favourite.user, self.user)
         self.assertEqual(self.favourite.recipe, self.recipe)
 
         self.assertTrue(isinstance(self.favourite, Favourite))
         self.assertEqual(
             str(self.favourite),
-            f'{self.favourite.author.full_name}: {self.favourite.recipe.name}'.strip(),
+            f'{self.favourite.user.full_name}: {self.favourite.recipe.name}'.strip(),
         )

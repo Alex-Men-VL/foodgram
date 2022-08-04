@@ -21,10 +21,10 @@ class Favourite(behaviors.Timestamped):
         on_delete=models.CASCADE,
         db_index=True,
     )
-    author = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='favourites',
-        verbose_name='Владелец',
+        verbose_name='Пользователь',
         on_delete=models.CASCADE,
         db_index=True,
     )
@@ -34,8 +34,8 @@ class Favourite(behaviors.Timestamped):
         verbose_name_plural = 'Избранное'
         unique_together = (
             'recipe',
-            'author',
+            'user',
         )
 
     def __str__(self) -> str:
-        return f'{self.author.full_name}: {self.recipe.name}'.strip()
+        return f'{self.user.full_name}: {self.recipe.name}'.strip()

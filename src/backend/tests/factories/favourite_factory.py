@@ -9,10 +9,9 @@ from .user_factory import UserFactory
 
 class FavouriteFactory(DjangoModelFactory):
 
-    author = factory.SubFactory(UserFactory)
+    user = factory.SubFactory(UserFactory)
     recipe = factory.SubFactory(
         RecipeFactory,
-        author=author,
     )
 
     class Meta:
