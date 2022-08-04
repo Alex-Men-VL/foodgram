@@ -10,7 +10,7 @@ class RecipeIngredientInline(admin.TabularInline):
     extra = 2
     classes = ('collapse',)
     fields = (
-        'quantity',
+        'amount',
         'ingredient',
     )
     raw_id_fields = ('ingredient',)
