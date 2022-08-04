@@ -531,6 +531,29 @@ social-auth-app-django = ">=4.0.0,<5.0.0"
 test = ["djet (>=0.2.2,<0.3.0)", "pytest-pythonpath (>=0.7.3,<0.8.0)", "pytest-django (>=3.10.0,<4.0.0)", "pytest-cov (>=2.10.1,<3.0.0)", "coverage (>=5.3,<6.0)", "codecov (>=2.0.16,<3.0.0)", "pytest (>=6.0.2,<7.0.0)"]
 
 [[package]]
+name = "drf-extra-fields"
+version = "3.4.0"
+description = "Additional fields for Django Rest Framework."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Django = ">=2.2"
+djangorestframework = ">=3.9.2"
+
+[package.extras]
+base64imagefield = ["Pillow (>=6.2.1)"]
+
+[[package]]
+name = "drf-writable-nested"
+version = "0.6.4"
+description = "Writable nested helpers for django-rest-framework's serializers"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "environs"
 version = "9.5.0"
 description = "simplified environment variable parsing"
@@ -1411,7 +1434,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "e976d41915d1d57257f707836754dedff79cf71c83ecfd90b5f4a4b19f696820"
+content-hash = "870e7e38ff8a8924e59cc3ce6f60f2c86721d512d1e72fe6b6e7eca563c96640"
 
 [metadata.files]
 appdirs = [
@@ -1724,6 +1747,13 @@ djet = [
 djoser = [
     {file = "djoser-2.1.0-py3-none-any.whl", hash = "sha256:9590378d59eb3243572bcb6b0a45268a3e31bedddc15235ca248a18c7bc0ffe6"},
     {file = "djoser-2.1.0.tar.gz", hash = "sha256:3299073aa5822f9ad02bc872b87e719051c07d36cdc87a05b2afdb2c3bad46d1"},
+]
+drf-extra-fields = [
+    {file = "drf-extra-fields-3.4.0.tar.gz", hash = "sha256:6224ae29ddfe80f38e36a1a5f7f1837cec1a4ec90e8960b473d43167f6d427d0"},
+    {file = "drf_extra_fields-3.4.0-py3-none-any.whl", hash = "sha256:cc4e35e8b0fbef92a4295dfa5adac1436c0d51402ecc4facadb406e45e24f3bb"},
+]
+drf-writable-nested = [
+    {file = "drf_writable_nested-0.6.4-py3-none-any.whl", hash = "sha256:e3224edcaaf86cc43a1e0d8e2f39aed42e651b45ab0106dadf02f07af3806626"},
 ]
 environs = [
     {file = "environs-9.5.0-py2.py3-none-any.whl", hash = "sha256:1e549569a3de49c05f856f40bce86979e7d5ffbbc4398e7f338574c220189124"},
