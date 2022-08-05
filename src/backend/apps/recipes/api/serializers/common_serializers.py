@@ -156,27 +156,11 @@ class RecipeCreateSerializer(NestedCreateMixin, ShortRecipeSerializer):
         :param ingredients_relations: Ингредиенты
         """
 
-        errors = []
         for ingredient in ingredients_relations:
             serializer = RecipeIngredientFlatCreateSerializer(
                 data=ingredient,
             )
-            try:
-                serializer.is_valid(raise_exception=True)
-                serializer.save(
-                    recipe=recipe,
-                )
-                errors.append({})
-            except ValidationError as exc:
-                errors.append(exc.detail)
-
-        self._check_errors(errors)
-
-    def _check_errors(self, errors: typing.List) -> None:
-        """Вывод ошибок валидации
-
-        :param errors: Список ошибок валидации
-        """
-
-        if any(errors):
-            raise ValidationError({'ingredients': errors})
+            serializer.is_valid(raise_exception=True)
+            serializer.save(
+                recipe=recipe,
+            )
