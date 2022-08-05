@@ -1,6 +1,5 @@
 import typing
 
-from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.serializers import BaseSerializer
 
@@ -13,12 +12,7 @@ from .serializers import RecipeCreateSerializer
 from .serializers import RecipeRetrieveSerializer
 
 
-class RecipeViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    viewsets.GenericViewSet,
-):
+class RecipeViewSet(viewsets.ModelViewSet):
     """ViewSet рецепта"""
 
     serializer_class = RecipeRetrieveSerializer
@@ -31,6 +25,8 @@ class RecipeViewSet(
         )
 
     def get_serializer_class(self) -> typing.Type[BaseSerializer]:
-        if self.action == 'create':
+        if self.action == 'partial_update':
+            self.kwargs['partial'] = True
+        if self.action in {'create', 'update', 'partial_update'}:
             return RecipeCreateSerializer
         return self.serializer_class
