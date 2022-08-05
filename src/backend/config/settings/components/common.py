@@ -187,3 +187,6 @@ DJOSER = {
     'HIDE_USERS': False,
     'LOGOUT_ON_PASSWORD_CHANGE': True,
 }
+
+# SITE
+SITE_ID = 1
