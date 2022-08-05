@@ -35,7 +35,7 @@ def get_recipes_for_current_user(
 
 def get_recipe_ingredients(
     recipe: Recipe,
-) -> RecipeIngredient:
+) -> 'QuerySet[RecipeIngredient]':
     """Возвращает список ингредиентов рецепта
 
     :param recipe: Рецепт
