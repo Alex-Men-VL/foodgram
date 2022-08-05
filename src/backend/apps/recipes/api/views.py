@@ -8,6 +8,7 @@ from django.db.models import QuerySet
 from ..models import Recipe
 from ..selectors import get_recipes_for_current_user
 from .pagination import PageNumberLimitPagination
+from .permissions import IsOwnerOrReadOnly
 from .serializers import RecipeCreateSerializer
 from .serializers import RecipeRetrieveSerializer
 
@@ -17,6 +18,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     serializer_class = RecipeRetrieveSerializer
     pagination_class = PageNumberLimitPagination
+    permission_classes = (
+        IsOwnerOrReadOnly,
+    )
 
     def get_queryset(self) -> 'QuerySet[Recipe]':
         current_user = self.request.user
