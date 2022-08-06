@@ -35,8 +35,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
     def get_serializer_class(self) -> typing.Type[BaseSerializer]:
-        if self.action == 'partial_update':
-            self.kwargs['partial'] = True
         if self.action in {'create', 'update', 'partial_update'}:
             return RecipeCreateSerializer
         return self.serializer_class
