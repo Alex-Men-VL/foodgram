@@ -12,6 +12,7 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 ]
 
 LOCAL_APPS = [
@@ -28,6 +29,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'django_filters',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -167,6 +169,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
+    'PAGE_SIZE': 20,
 }
 
 # DJOSER
@@ -185,3 +188,6 @@ DJOSER = {
     'HIDE_USERS': False,
     'LOGOUT_ON_PASSWORD_CHANGE': True,
 }
+
+# SITE
+SITE_ID = 1

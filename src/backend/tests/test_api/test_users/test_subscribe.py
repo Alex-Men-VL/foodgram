@@ -7,6 +7,8 @@ from django.urls import reverse
 from apps.subscriptions.models import Subscription
 from apps.users.api.serializers import UserSubscriptionSerializer
 from apps.users.models import CustomUser
+from apps.users.selectors import get_current_author
+from apps.users.selectors import get_current_user
 
 from ...factories import login_user
 from ...factories import SubscriptionFactory
@@ -36,16 +38,8 @@ class UserViewSetSubscribeTest(
 
         self.assert_status_equal(response, status.HTTP_201_CREATED)
 
-        author = (
-            CustomUser.objects.get_with_recipes_count()
-            .get_with_subscription_status(
-                subscriber_id=self.user,
-            )
-            .get(
-                pk=self.author.pk,
-            )
-        )
-        subscriber = CustomUser.objects.get(pk=self.user.pk)
+        author = get_current_author(self.author.pk, self.user.pk)
+        subscriber = get_current_user(self.user.pk)
 
         serializer = UserSubscriptionSerializer(author)
         self.assertEqual(response.data, serializer.data)
