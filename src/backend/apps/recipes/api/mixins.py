@@ -15,7 +15,9 @@ class RecipeUpdateMixin:
     ) -> Recipe:
         """Обновление рецепта"""
 
-        ingredients_relations = self._extract_ingredients_relations(validated_data)
+        ingredients_relations = self._extract_ingredients_relations(
+            validated_data,
+        )
 
         # Update instance
         instance = super().update(  # type: ignore
@@ -37,8 +39,11 @@ class RecipeUpdateMixin:
         """Получение ингредиентов рецепта"""
 
         ingredients_field_name = 'ingredients'
-        if ingredients_field := self.fields.get(ingredients_field_name):  # type: ignore
-            validated_data.pop(ingredients_field.source)
+        if (
+            ingredients_field := self.fields.get(ingredients_field_name)  # type: ignore
+        ) and ingredients_field.source in validated_data:
+            if ingredients_field.source in validated_data:
+                validated_data.pop(ingredients_field.source)
 
         return self.get_initial().get(ingredients_field_name)  # type: ignore
 
