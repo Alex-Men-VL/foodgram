@@ -8,7 +8,9 @@ from factory.django import DjangoModelFactory
 from factory.django import ImageField
 
 from apps.recipes.models import Recipe
+from apps.recipes.models import RecipeIngredient
 
+from .ingredients_factory import IngredientFactory
 from .user_factory import UserFactory
 
 
@@ -54,3 +56,12 @@ class RecipeFactory(DjangoModelFactory):
             # A list of tags were passed in, use them
             for tag in extracted:
                 self.tags.add(tag)
+
+
+class RecipeIngredientFactory(DjangoModelFactory):
+
+    ingredient = SubFactory(IngredientFactory)
+    amount = Faker('random_digit_not_null')
+
+    class Meta:
+        model = RecipeIngredient
