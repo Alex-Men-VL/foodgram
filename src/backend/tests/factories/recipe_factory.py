@@ -3,10 +3,13 @@ import typing
 
 from factory import Faker
 from factory import post_generation
+from factory import SubFactory
 from factory.django import DjangoModelFactory
 from factory.django import ImageField
 
 from apps.recipes.models import Recipe
+
+from .user_factory import UserFactory
 
 
 class RecipeFactory(DjangoModelFactory):
@@ -15,6 +18,7 @@ class RecipeFactory(DjangoModelFactory):
     image = ImageField()
     text = Faker('paragraph')
     cooking_time = Faker('random_digit_not_null')
+    author = SubFactory(UserFactory)
 
     class Meta:
         model = Recipe
