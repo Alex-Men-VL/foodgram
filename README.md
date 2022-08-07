@@ -1,5 +1,9 @@
 # Foodgram website, "Food Assistant"
 
+![Build status](https://github.com/Alex-Men-VL/foodgram/actions/workflows/main.yaml/badge.svg?branch=main)
+[![codecov](https://codecov.io/gh/Alex-Men-VL/foodgram/branch/main/graph/badge.svg?token=F22BFAXWLA)](https://codecov.io/gh/Alex-Men-VL/foodgram)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 **Foodgram** is an online service where users can post recipes, subscribe to other users' publications,
 add favorite recipes to their "Favorites" list, and download a summary list of products needed to prepare one or
 more selected dishes before going to the store.
