@@ -1,8 +1,7 @@
-import logging
 import socket
 import typing
 
-from config.settings.components import env
+from config.settings.components import config
 from config.settings.components.common import DATABASES
 from config.settings.components.common import INSTALLED_APPS
 from config.settings.components.common import MIDDLEWARE
@@ -14,7 +13,7 @@ from config.settings.components.common import MIDDLEWARE
 
 DEBUG = True
 
-SECRET_KEY = env.str('DJANGO_SECRET_KEY', 'REPLACE_ME')
+SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 ALLOWED_HOSTS = [
     'foodgram',
@@ -46,7 +45,7 @@ INSTALLED_APPS += (
 # STATIC:
 # ------------------------------------------------------------------------------
 
-STATIC_URL = env.str('DJANGO_STATIC_URL', default='/static/')
+STATIC_URL = config('DJANGO_STATIC_URL', default='/static/')
 STATIC_ROOT = '/var/www/django/static'
 
 STATICFILES_DIRS: typing.List[str] = [
@@ -56,7 +55,7 @@ STATICFILES_DIRS: typing.List[str] = [
 # MEDIA
 # ------------------------------------------------------------------------------
 
-MEDIA_URL = env.str('DJANGO_MEDIA_URL', default='/media/')
+MEDIA_URL = config('DJANGO_MEDIA_URL', default='/media/')
 MEDIA_ROOT = '/var/www/django/media'
 
 

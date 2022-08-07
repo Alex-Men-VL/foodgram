@@ -1,12 +1,14 @@
+from os import environ
 from pathlib import Path
 
-from environs import Env
+from decouple import AutoConfig
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+BASE_DIR = Path(__file__).parent.parent.parent.parent
 
-env = Env()
+# Managing environment via `DJANGO_ENV` variable:
+environ.setdefault('DJANGO_ENV', 'development')
+_ENV = environ['DJANGO_ENV']
 
-READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
-if READ_DOT_ENV_FILE:
-    # OS environment variables take precedence over variables from .env
-    env.read_env(str(BASE_DIR.parent.parent / '.env'))
+config = AutoConfig(
+    search_path=BASE_DIR.joinpath(f'.envs/{_ENV}'),
+)

@@ -1,4 +1,4 @@
-from config.settings.components import env
+from config.settings.components import config
 from config.settings.components.common import INSTALLED_APPS
 
 # Setting the production status:
@@ -8,7 +8,7 @@ from config.settings.components.common import INSTALLED_APPS
 
 DEBUG = False
 
-SECRET_KEY = env.str('DJANGO_SECRET_KEY')
+SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -26,10 +26,10 @@ INSTALLED_APPS += (
 # STORAGES
 # ------------------------------------------------------------------------------
 
-AWS_S3_ENDPOINT_URL = env.str('AWS_S3_ENDPOINT_URL')
-AWS_ACCESS_KEY_ID = env.str('DJANGO_AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = env.str('DJANGO_AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = env.str('DJANGO_AWS_STORAGE_BUCKET_NAME')
+AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
+AWS_ACCESS_KEY_ID = config('DJANGO_AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('DJANGO_AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('DJANGO_AWS_STORAGE_BUCKET_NAME')
 _AWS_EXPIRY = 60 * 60 * 24 * 7
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': f'max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate',
