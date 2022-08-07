@@ -298,6 +298,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "django-cleanup"
+version = "6.0.0"
+description = "Deletes old files."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "django-coverage-plugin"
 version = "2.0.3"
 description = "Django template coverage.py plugin"
@@ -1434,7 +1442,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "870e7e38ff8a8924e59cc3ce6f60f2c86721d512d1e72fe6b6e7eca563c96640"
+content-hash = "59de2d60e032300f873199ca6f023f04f4e27cdeda555bcd2ece17f7e9e6e087"
 
 [metadata.files]
 appdirs = [
@@ -1680,6 +1688,10 @@ django-behaviors = [
 django-cache-url = [
     {file = "django-cache-url-3.4.2.tar.gz", hash = "sha256:6cc9901a99a99751f5458aa7de08ce06e48c1441b1a94c9457d78af74fab9a26"},
     {file = "django_cache_url-3.4.2-py2.py3-none-any.whl", hash = "sha256:c4a62634cffc9d636073cef597a44576d67b07660ab2ef1f02b160ee7ecf0e98"},
+]
+django-cleanup = [
+    {file = "django-cleanup-6.0.0.tar.gz", hash = "sha256:922e06ef8839c92bd3ab37a84db6058b8764f3fe44dbb4487bbca941d288280a"},
+    {file = "django_cleanup-6.0.0-py2.py3-none-any.whl", hash = "sha256:997feab3b1f7a2e84f71c29e83b1d664459ec0d4b1924977b1fa25b5babb8703"},
 ]
 django-coverage-plugin = [
     {file = "django_coverage_plugin-2.0.3-py3-none-any.whl", hash = "sha256:fd888f2ff41e3410a004d799b198cf8b19694d692a2d2264e8c944b9321bedc3"},
