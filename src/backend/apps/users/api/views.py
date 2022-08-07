@@ -98,11 +98,11 @@ class UserViewSet(DjoserUserViewSet):
             )
 
         setattr(current_author, 'is_subscribed', True)  # noqa: B010
-        subscription_serializer = self.subscription_serializer_class(
+        serializer = self.get_serializer(
             current_author,
         )
         return Response(
-            subscription_serializer.data,
+            serializer.data,
             status=status.HTTP_201_CREATED,
         )
 
