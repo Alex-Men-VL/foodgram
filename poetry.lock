@@ -562,6 +562,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "dump-env"
+version = "1.3.0"
+description = "A utility tool to create .env files"
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[[package]]
 name = "environs"
 version = "9.5.0"
 description = "simplified environment variable parsing"
@@ -1442,7 +1450,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "59de2d60e032300f873199ca6f023f04f4e27cdeda555bcd2ece17f7e9e6e087"
+content-hash = "fc4ff8add8c8fada088538d6e1b66a5d1d65e4a18980d564ed1b05a66423a1ae"
 
 [metadata.files]
 appdirs = [
@@ -1766,6 +1774,10 @@ drf-extra-fields = [
 ]
 drf-writable-nested = [
     {file = "drf_writable_nested-0.6.4-py3-none-any.whl", hash = "sha256:e3224edcaaf86cc43a1e0d8e2f39aed42e651b45ab0106dadf02f07af3806626"},
+]
+dump-env = [
+    {file = "dump-env-1.3.0.tar.gz", hash = "sha256:6c2874c7f30c7cea945f3438e37e67e081644bd6c5383189613e5fc31c277837"},
+    {file = "dump_env-1.3.0-py3-none-any.whl", hash = "sha256:c2f3bdda16f0dbb79fca0b22f8df763cff4009d311342c73ce36bcd1ad8b007c"},
 ]
 environs = [
     {file = "environs-9.5.0-py2.py3-none-any.whl", hash = "sha256:1e549569a3de49c05f856f40bce86979e7d5ffbbc4398e7f338574c220189124"},

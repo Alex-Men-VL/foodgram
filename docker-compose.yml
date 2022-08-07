@@ -4,14 +4,11 @@ services:
     image: postgres:12.0-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB-foodgram_dev}
-      POSTGRES_USER: ${POSTGRES_USER-foodgram_dev}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD-foodgram}
+    env_file: ./src/backend/.envs/.development/.env
 
   backend:
     <<: &backend
-      image: foodgram_backend
+      image: 'foodgram_backend:dev'
       build:
         target: development_build
         context: .
@@ -20,24 +17,18 @@ services:
           DJANGO_ENV: development
         cache_from:
           - foodgram_backend
+      env_file: ./src/backend/.envs/.development/.env
     command: bash ./docker/django/gunicorn.sh
     volumes:
       - static_data:/var/www/django/static
       - media_data:/var/www/django/media
-    environment:
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY-REPLACE_ME}
-      DJANGO_DATABASE_NAME: ${DJANGO_DATABASE_NAME-foodgram_dev}
-      DJANGO_DATABASE_USER: ${DJANGO_DATABASE_USER-foodgram_dev}
-      DJANGO_DATABASE_PASSWORD: ${DJANGO_DATABASE_PASSWORD-foodgram}
-      DJANGO_DATABASE_HOST: ${DJANGO_DATABASE_HOST-db}
-      DJANGO_DATABASE_PORT: ${DJANGO_DATABASE_PORT-5432}
     restart: unless-stopped
     depends_on:
       - db
 
   frontend:
     <<: &frontend
-      image: foodgram_frontend
+      image: 'foodgram_frontend:dev'
       build:
         context: .
         dockerfile: ./src/frontend/docker/node/Dockerfile

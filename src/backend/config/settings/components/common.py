@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 
-from config.settings.components import env
+from config.settings.components import config
 
 # APPS
 # ------------------------------------------------------------------------------
@@ -89,12 +89,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.str('DJANGO_DATABASE_NAME'),
-        'USER': env.str('DJANGO_DATABASE_USER'),
-        'PASSWORD': env.str('DJANGO_DATABASE_PASSWORD'),
-        'HOST': env.str('DJANGO_DATABASE_HOST'),
-        'PORT': env.int('DJANGO_DATABASE_PORT'),
-        'CONN_MAX_AGE': env.int('CONN_MAX_AGE', 60),
+        'NAME': config('DJANGO_DATABASE_NAME'),
+        'USER': config('DJANGO_DATABASE_USER'),
+        'PASSWORD': config('DJANGO_DATABASE_PASSWORD'),
+        'HOST': config('DJANGO_DATABASE_HOST'),
+        'PORT': config('DJANGO_DATABASE_PORT', cast=int),
+        'CONN_MAX_AGE': config('CONN_MAX_AGE', cast=int, default=60),
         'OPTIONS': {
             'connect_timeout': 10,
             'options': '-c statement_timeout=15000ms',
