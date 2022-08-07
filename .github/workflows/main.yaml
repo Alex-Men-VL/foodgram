@@ -76,7 +76,7 @@ jobs:
 
       - name: Create .env configuration file
         run: |
-          pip install --update pip
+          pip install --upgrade pip
           echo $DJANGO_SECRET_KEY
           pip install dump-env
           cd src/backend/.envs/.development
