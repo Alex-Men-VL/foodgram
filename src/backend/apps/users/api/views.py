@@ -15,6 +15,7 @@ from ...subscriptions.selectors import get_user_subscriptions_authors
 from ...subscriptions.services import SubscriptionService
 from ..models import CustomUser
 from ..selectors import get_users_with_recipes
+from .pagination import PageNumberLimitPagination
 from .serializers import UserSubscriptionSerializer
 
 
@@ -23,6 +24,7 @@ class UserViewSet(DjoserUserViewSet):
 
     queryset = CustomUser.objects.all()
     subscription_serializer_class = UserSubscriptionSerializer
+    pagination_class = PageNumberLimitPagination
 
     @action(methods=['get'], detail=False)
     def subscriptions(
