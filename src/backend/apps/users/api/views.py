@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from django.db.models.query import QuerySet
 from django.http import HttpRequest
@@ -15,6 +16,7 @@ from ...subscriptions.selectors import get_user_subscriptions_authors
 from ...subscriptions.services import SubscriptionService
 from ..models import CustomUser
 from ..selectors import get_users_with_recipes
+from .pagination import PageNumberLimitPagination
 from .serializers import UserSubscriptionSerializer
 
 
@@ -23,6 +25,8 @@ class UserViewSet(DjoserUserViewSet):
 
     queryset = CustomUser.objects.all()
     subscription_serializer_class = UserSubscriptionSerializer
+    pagination_class = PageNumberLimitPagination
+    recipes_limit_query_param = 'recipes_limit'
 
     @action(methods=['get'], detail=False)
     def subscriptions(
@@ -30,20 +34,17 @@ class UserViewSet(DjoserUserViewSet):
         request: HttpRequest,
     ) -> HttpResponse:
         """Эндпоинт для получения пользователей, на которых подписан текущий пользователь"""
-
         current_user = self.get_instance()
-        subscriptions_authors = get_user_subscriptions_authors(
+        queryset = get_user_subscriptions_authors(
             user=current_user,
         )
 
-        subscription_serializer = self.subscription_serializer_class(
-            subscriptions_authors,
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(
+            page,
             many=True,
         )
-        return Response(
-            subscription_serializer.data,
-            status=status.HTTP_200_OK,
-        )
+        return self.get_paginated_response(serializer.data)
 
     @action(methods=['get', 'delete'], detail=True)
     def subscribe(
@@ -90,11 +91,11 @@ class UserViewSet(DjoserUserViewSet):
             )
 
         setattr(current_author, 'is_subscribed', True)  # noqa: B010
-        subscription_serializer = self.subscription_serializer_class(
+        serializer = self.get_serializer(
             current_author,
         )
         return Response(
-            subscription_serializer.data,
+            serializer.data,
             status=status.HTTP_201_CREATED,
         )
 
@@ -113,3 +114,15 @@ class UserViewSet(DjoserUserViewSet):
             return super().get_permissions()
 
         return [permission() for permission in permission_classes]
+
+    def get_serializer_class(self) -> typing.Type[Serializer] | typing.Any:
+        if self.action in {'subscribe', 'subscriptions'}:
+            return self.subscription_serializer_class
+        return super().get_serializer_class()
+
+    def get_serializer_context(self) -> typing.Dict[str, typing.Any]:
+        context = super().get_serializer_context()
+
+        recipes_limit = self.request.query_params.get(self.recipes_limit_query_param, -1)
+        context[self.recipes_limit_query_param] = recipes_limit
+        return context

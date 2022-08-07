@@ -53,6 +53,7 @@ class UserViewSetListTest(
             users,
             many=True,
         )
+        response_users = response.json()['results']
 
-        self.assertEqual(len(response.json()), total_users_number)
-        self.assertEqual(response.json(), serializer.data)
+        self.assertEqual(len(response_users), total_users_number)
+        self.assertEqual(response_users, serializer.data)
