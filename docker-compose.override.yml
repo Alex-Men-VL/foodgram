@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   db:
+    env_file: ./src/backend/.envs/.development/.env
     ports:
       # We only bind ports directly in development:
       - '5432:5432'
