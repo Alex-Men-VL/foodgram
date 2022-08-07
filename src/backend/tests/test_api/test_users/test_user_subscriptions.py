@@ -55,12 +55,13 @@ class UserViewSetSubscriptionsTest(
             authors,
             many=True,
         )
+        response_subscriptions = response.json()['results']
 
-        self.assertEqual(len(response.json()), self.subscriptions_number)
-        self.assertEqual(response.json(), serializer.data)
+        self.assertEqual(len(response_subscriptions), self.subscriptions_number)
+        self.assertEqual(response_subscriptions, serializer.data)
         self.assertTrue(
             all(
                 subscription['is_subscribed']
-                for subscription in response.json()
+                for subscription in response_subscriptions
             ),
         )

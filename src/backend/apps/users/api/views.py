@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from django.db.models.query import QuerySet
 from django.http import HttpRequest
@@ -34,18 +35,23 @@ class UserViewSet(DjoserUserViewSet):
         """Эндпоинт для получения пользователей, на которых подписан текущий пользователь"""
 
         current_user = self.get_instance()
-        subscriptions_authors = get_user_subscriptions_authors(
+        queryset = get_user_subscriptions_authors(
             user=current_user,
         )
 
-        subscription_serializer = self.subscription_serializer_class(
-            subscriptions_authors,
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(
+                page,
+                many=True,
+            )
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(
+            queryset,
             many=True,
         )
-        return Response(
-            subscription_serializer.data,
-            status=status.HTTP_200_OK,
-        )
+        return Response(serializer.data)
 
     @action(methods=['get', 'delete'], detail=True)
     def subscribe(
@@ -115,3 +121,8 @@ class UserViewSet(DjoserUserViewSet):
             return super().get_permissions()
 
         return [permission() for permission in permission_classes]
+
+    def get_serializer_class(self) -> typing.Type[Serializer] | typing.Any:
+        if self.action in {'subscribe', 'subscriptions'}:
+            return self.subscription_serializer_class
+        return super().get_serializer_class()
