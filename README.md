@@ -1,15 +1,11 @@
 # Foodgram website, "Food Assistant"
 
----
-
 **Foodgram** is an online service where users can post recipes, subscribe to other users' publications,
 add favorite recipes to their "Favorites" list, and download a summary list of products needed to prepare one or
 more selected dishes before going to the store.
 
 
 ## Contents
-
----
 
 - [Features](#features)
 - [Development](#development)
@@ -24,8 +20,6 @@ more selected dishes before going to the store.
 
 <a name="features"></a>
 ## Features
-
----
 
 - For `Django 3.2`
 - Works with `Python 3.10`
@@ -44,8 +38,6 @@ more selected dishes before going to the store.
 
 <a name="development"></a>
 ## Development
-
----
 
 <a name="dev-prerequisites"></a>
 ### Prerequisites
@@ -127,27 +119,19 @@ TODO
 <a name="production"></a>
 ## Production
 
----
-
 TODO
 
 <a name="authors"></a>
 ## Authors
-
----
 
 - **Menshikov Aleksandr** — Site backend — [GitHub](https://github.com/Alex-Men-VL)
 
 <a name="license"></a>
 ## License
 
----
-
 MIT licensed. See the [LICENSE](LICENSE) file for more details.
 
 <a name="thanks"></a>
 ## Thanks
-
----
 
 [Yandex practicum](https://practicum.yandex.ru/profile/middle-python/) for the provided front for the site.
