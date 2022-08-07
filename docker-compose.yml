@@ -17,7 +17,6 @@ services:
           DJANGO_ENV: development
         cache_from:
           - foodgram_backend
-      env_file: ./src/backend/.envs/.development/.env
     command: bash ./docker/django/gunicorn.sh
     volumes:
       - static_data:/var/www/django/static

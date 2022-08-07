@@ -6,6 +6,7 @@ services:
       - '5432:5432'
 
   backend:
+    env_file: ./src/backend/.envs/.development/.env
     volumes:
       # We only mount source code in development:
       - ./src/backend:/code

@@ -31,7 +31,7 @@ services:
           DJANGO_ENV: production
         cache_from:
           - ${BACKEND_IMAGE-foodgram_backend:prod}
-      env_file: ./src/backend/.envs/.production/.env
+    env_file: ./src/backend/.envs/.production/.env
 
   frontend:
     <<: &frontend
