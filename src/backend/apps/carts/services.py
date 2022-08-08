@@ -37,7 +37,7 @@ class CartService:
 
         user_cart = self._get_or_create_user_cart()
 
-        if self.recipe.pk in user_cart.recipes.values_list('id', flat=True):
+        if self.recipe.pk not in user_cart.recipes.values_list('id', flat=True):
             return False
 
         user_cart.recipes.remove(self.recipe)
