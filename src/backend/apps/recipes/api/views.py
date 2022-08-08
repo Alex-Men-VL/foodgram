@@ -13,8 +13,6 @@ from django.http import HttpRequest
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 
-from apps.favourites.api.serializers import FavouriteSerializer
-
 from ...carts.services import CartService
 from ...favourites.services import FavouriteService
 from ..models import Recipe
@@ -32,8 +30,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     recipe_retrieve_serializer_class = RecipeRetrieveSerializer
     recipe_create_serializer_class = RecipeCreateSerializer
-    favourite_serializer_class = FavouriteSerializer
-    cart_recipe_serializer_class = ShortRecipeSerializer
+    short_recipe_serializer_class = ShortRecipeSerializer
 
     pagination_class = PageNumberLimitPagination
     permission_classes = (
@@ -44,7 +41,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     filterset_class = RecipeFilter
 
-    @action(methods=['get', 'delete'], detail=True, permission_classes=[IsAuthenticated])
+    @action(detail=True, permission_classes=[IsAuthenticated])
     def favorite(
         self,
         request: HttpRequest,
@@ -62,21 +59,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             user=current_user,
             recipe=current_recipe,
         )
-
-        if self.request.method == 'DELETE':
-            deleted = service.remove_recipe_from_favorites()
-
-            if not deleted:
-                return Response(
-                    {
-                        'errors': 'Рецепт не был в списке избранного',
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        # Обработка метода `GET` - добавление рецепта в список избранного
         favourite, created = service.add_recipe_to_favorites()
 
         if not created:
@@ -87,13 +69,43 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        favourite_serializer = self.favourite_serializer_class(
-            favourite,
+        serializer = self.get_serializer(
+            current_recipe,
         )
         return Response(
-            favourite_serializer.data,
+            serializer.data,
             status=status.HTTP_201_CREATED,
         )
+
+    @favorite.mapping.delete
+    def remove_recipe_from_favorite(
+        self,
+        request: HttpRequest,
+        pk: typing.Optional[int] = None,
+    ) -> HttpResponse:
+        """Эндпоинт для удаления рецепта из избранного"""
+
+        current_user = self.request.user
+        current_recipe = get_object_or_404(
+            self.get_queryset(),
+            pk=pk,
+        )
+
+        service = FavouriteService(
+            user=current_user,
+            recipe=current_recipe,
+        )
+        deleted = service.remove_recipe_from_favorites()
+
+        if not deleted:
+            return Response(
+                {
+                    'errors': 'Рецепт не был в списке избранного',
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, permission_classes=[IsAuthenticated])
     def shopping_cart(
@@ -132,7 +144,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
     @shopping_cart.mapping.delete
-    def delete_recipe_from_shopping_cart(
+    def remove_recipe_from_shopping_cart(
         self,
         request: HttpRequest,
         pk: typing.Optional[int] = None,
@@ -170,8 +182,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self) -> typing.Type[BaseSerializer]:
         if self.action in {'create', 'update', 'partial_update'}:
             return self.recipe_create_serializer_class
-        if self.action == 'favorite':
-            return self.favourite_serializer_class
-        if self.action == 'shopping_cart':
-            return self.cart_recipe_serializer_class
+        elif self.action in {'favorite', 'shopping_cart'}:
+            return self.short_recipe_serializer_class
         return self.recipe_retrieve_serializer_class
