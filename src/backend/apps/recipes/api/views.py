@@ -15,6 +15,7 @@ from django.shortcuts import get_object_or_404
 
 from apps.favourites.api.serializers import FavouriteSerializer
 
+from ...carts.services import CartService
 from ...favourites.services import FavouriteService
 from ..models import Recipe
 from ..selectors import get_recipes_for_current_user
@@ -23,12 +24,17 @@ from .pagination import PageNumberLimitPagination
 from .permissions import IsOwnerOrReadOnly
 from .serializers import RecipeCreateSerializer
 from .serializers import RecipeRetrieveSerializer
+from .serializers import ShortRecipeSerializer
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     """ViewSet рецепта"""
 
-    serializer_class = RecipeRetrieveSerializer
+    recipe_retrieve_serializer_class = RecipeRetrieveSerializer
+    recipe_create_serializer_class = RecipeCreateSerializer
+    favourite_serializer_class = FavouriteSerializer
+    cart_recipe_serializer_class = ShortRecipeSerializer
+
     pagination_class = PageNumberLimitPagination
     permission_classes = (
         IsOwnerOrReadOnly,
@@ -37,7 +43,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         filters.DjangoFilterBackend,
     )
     filterset_class = RecipeFilter
-    favourite_serializer_class = FavouriteSerializer
 
     @action(methods=['get', 'delete'], detail=True)
     def favorite(
@@ -90,6 +95,42 @@ class RecipeViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
         )
 
+    @action(detail=True)
+    def shopping_cart(
+        self,
+        request: HttpRequest,
+        pk: typing.Optional[int] = None,
+    ) -> HttpResponse:
+        """Эндпоинт для добавления рецепта в список покупок"""
+
+        current_user = self.request.user
+        current_recipe = get_object_or_404(
+            self.get_queryset(),
+            pk=pk,
+        )
+
+        service = CartService(
+            user=current_user,
+            recipe=current_recipe,
+        )
+        cart, added = service.add_recipe_to_shopping_cart()
+
+        if not added:
+            return Response(
+                {
+                    'errors': 'Рецепт уже добавлен в список покупок',
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer = self.get_serializer(
+            current_recipe,
+        )
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
+
     def get_queryset(self) -> 'QuerySet[Recipe]':
         current_user = self.request.user
         return get_recipes_for_current_user(
@@ -98,11 +139,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self) -> typing.Type[BaseSerializer]:
         if self.action in {'create', 'update', 'partial_update'}:
-            return RecipeCreateSerializer
-        return self.serializer_class
+            return self.recipe_create_serializer_class
+        if self.action == 'favorite':
+            return self.favourite_serializer_class
+        if self.action == 'shopping_cart':
+            return self.cart_recipe_serializer_class
+        return self.recipe_retrieve_serializer_class
 
     def get_permissions(self) -> typing.List[typing.Any]:
-        if self.action in {'favorite'}:
+        if self.action in {'favorite', 'shopping_cart'}:
             permission_classes = [IsAuthenticated]
         else:
             return super().get_permissions()
