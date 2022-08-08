@@ -44,7 +44,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     filterset_class = RecipeFilter
 
-    @action(methods=['get', 'delete'], detail=True)
+    @action(methods=['get', 'delete'], detail=True, permission_classes=[IsAuthenticated])
     def favorite(
         self,
         request: HttpRequest,
@@ -95,7 +95,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
         )
 
-    @action(detail=True)
+    @action(detail=True, permission_classes=[IsAuthenticated])
     def shopping_cart(
         self,
         request: HttpRequest,
@@ -131,6 +131,36 @@ class RecipeViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
         )
 
+    @shopping_cart.mapping.delete
+    def delete_recipe_from_shopping_cart(
+        self,
+        request: HttpRequest,
+        pk: typing.Optional[int] = None,
+    ) -> HttpResponse:
+        """Эндпоинт для удаления рецепта из списка покупок"""
+
+        current_user = self.request.user
+        current_recipe = get_object_or_404(
+            self.get_queryset(),
+            pk=pk,
+        )
+
+        service = CartService(
+            user=current_user,
+            recipe=current_recipe,
+        )
+        deleted = service.remove_recipe_from_shopping_cart()
+
+        if not deleted:
+            return Response(
+                {
+                    'errors': 'Рецепт не был в списке покупок',
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     def get_queryset(self) -> 'QuerySet[Recipe]':
         current_user = self.request.user
         return get_recipes_for_current_user(
@@ -145,11 +175,3 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.action == 'shopping_cart':
             return self.cart_recipe_serializer_class
         return self.recipe_retrieve_serializer_class
-
-    def get_permissions(self) -> typing.List[typing.Any]:
-        if self.action in {'favorite', 'shopping_cart'}:
-            permission_classes = [IsAuthenticated]
-        else:
-            return super().get_permissions()
-
-        return [permission() for permission in permission_classes]
