@@ -4,6 +4,7 @@ services:
     image: postgres:12.0-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
+    env_file: ./src/backend/.envs/.env
 
   backend:
     <<: &backend
@@ -20,6 +21,7 @@ services:
     volumes:
       - static_data:/var/www/django/static
       - media_data:/var/www/django/media
+    env_file: ./src/backend/.envs/.env
     restart: unless-stopped
     depends_on:
       - db

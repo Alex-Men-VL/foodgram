@@ -1,8 +1,5 @@
 version: '3.8'
 services:
-  db:
-    env_file: ./src/backend/.envs/.production/.env
-
   caddy:
     image: caddy:2.5.2
     restart: unless-stopped
@@ -31,7 +28,6 @@ services:
           DJANGO_ENV: production
         cache_from:
           - ${BACKEND_IMAGE-foodgram_backend:prod}
-    env_file: ./src/backend/.envs/.production/.env
 
   frontend:
     <<: &frontend
