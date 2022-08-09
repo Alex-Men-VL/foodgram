@@ -22,7 +22,7 @@ class UserViewSetDetailTest(
         self.user: CustomUser = UserFactory.create()
         self.base_url = 'api:users-detail'
 
-    def test_unauthenticated_user_cannot_get_user_detail(self) -> None:
+    def test_unauthenticated_user_can_get_user_detail(self) -> None:
         """Проверка получения профиля пользователя неавторизованным пользователем"""
 
         response = self.client.get(
@@ -32,7 +32,8 @@ class UserViewSetDetailTest(
             ),
         )
 
-        self.assert_status_equal(response, status.HTTP_401_UNAUTHORIZED)
+        self.assert_status_equal(response, status.HTTP_200_OK)
+        self.assertFalse(response.data['is_subscribed'])
 
     def test_user_can_get_other_user_detail(self) -> None:
         """Проверка успешного получения профиля пользователя"""
