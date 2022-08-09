@@ -46,7 +46,7 @@ class CartService:
     def _get_or_create_user_cart(self) -> Cart:
         """Возвращает список покупок пользователя"""
 
-        if hasattr(self, 'user_cart'):
+        if hasattr(self, 'user_cart'):  # pragma: no cover
             return self.user_cart  # type: ignore
 
         user_cart, _ = (

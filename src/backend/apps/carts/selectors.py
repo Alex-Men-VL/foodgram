@@ -46,7 +46,7 @@ def get_cart_recipe(
 
     user_cart = get_user_cart(user_id)
 
-    if not user_cart:
+    if not user_cart:  # pragma: no cover
         return None
 
     cart_recipe = user_cart.recipes.filter(pk=recipe_id).first()
