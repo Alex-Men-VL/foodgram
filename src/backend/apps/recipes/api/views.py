@@ -13,6 +13,10 @@ from django.http import HttpRequest
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 
+from ...carts.selectors import check_cart_contains_recipes
+from ...carts.selectors import get_cart_recipes
+from ...carts.selectors import get_cart_total_ingredients_amount
+from ...carts.selectors import get_user_cart
 from ...carts.services import CartService
 from ...favourites.services import FavouriteService
 from ..models import Recipe
@@ -23,6 +27,7 @@ from .permissions import IsOwnerOrReadOnly
 from .serializers import RecipeCreateSerializer
 from .serializers import RecipeRetrieveSerializer
 from .serializers import ShortRecipeSerializer
+from .services import render_shopping_list
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -172,6 +177,36 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, permission_classes=[IsAuthenticated])
+    def download_shopping_cart(
+        self,
+        request: HttpRequest,
+    ) -> HttpResponse:
+        """Эндпоинт для скачивания файла со списком покупок"""
+
+        current_user = self.request.user
+        user_cart = get_user_cart(current_user.pk)
+
+        if not user_cart or not check_cart_contains_recipes(user_cart):
+            return Response(
+                {
+                    'errors': 'Список покупок пуст',
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        cart_recipes = get_cart_recipes(user_cart)
+        ingredients = get_cart_total_ingredients_amount(cart_recipes)
+
+        shopping_list = render_shopping_list(request, ingredients)
+        filename = f'{current_user.username}_shopping_list.txt'
+
+        response = HttpResponse(
+            shopping_list, content_type='text.txt; charset=utf-8',
+        )
+        response['Content-Disposition'] = f'attachment; filename={filename}'
+        return response
 
     def get_queryset(self) -> 'QuerySet[Recipe]':
         current_user = self.request.user
