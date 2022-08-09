@@ -117,11 +117,12 @@ class UserViewSet(DjoserUserViewSet):
 
     def get_queryset(self) -> 'QuerySet[CustomUser]':
         current_user = self.get_instance()
-        return (
-            super()
-            .get_queryset()
-            .get_with_subscription_status(subscriber_id=current_user)
-        )
+        queryset = super().get_queryset()
+
+        if current_user.is_anonymous:
+            return queryset.set_default_subscription_status(is_subscribed=False)
+
+        return queryset.get_with_subscription_status(subscriber_id=current_user)
 
     def get_permissions(self) -> typing.List[typing.Any]:
         if self.action == 'retrieve':
