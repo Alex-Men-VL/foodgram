@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Foodgram, «Продуктовый помощник»</title>
+</head>
+<body>
+  <h2>Список покупок</h2>
+  <ul>
+    {% for ingredient in ingredients %}
+    * {{ ingredient.ingredient_name }} ({{ ingredient.ingredient_measurement_unit }}) — {{ ingredient.amount }}
+    {% endfor %}
+  </ul>
+</body>
+<footer>
+  <h4>Дата создания {% now "d.m.Y H:i" %}</h4>
+</footer>
+</html>

@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 
+from config.settings.components import BASE_DIR
 from config.settings.components import config
 
 # APPS
@@ -140,7 +141,9 @@ STATICFILES_FINDERS = (
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR.joinpath('templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

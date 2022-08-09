@@ -2,12 +2,17 @@ from collections.abc import Sequence
 import typing
 
 from factory import post_generation
+from factory import SubFactory
 from factory.django import DjangoModelFactory
 
 from apps.carts.models import Cart
 
+from .user_factory import UserFactory
+
 
 class CartFactory(DjangoModelFactory):
+    owner = SubFactory(UserFactory)
+
     class Meta:
         model = Cart
 
