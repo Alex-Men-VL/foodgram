@@ -1,9 +1,9 @@
 import typing
 
 from djoser.views import UserViewSet as DjoserUserViewSet
+from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
@@ -28,7 +28,7 @@ class UserViewSet(DjoserUserViewSet):
     pagination_class = PageNumberLimitPagination
     recipes_limit_query_param = 'recipes_limit'
 
-    @action(methods=['get'], detail=False)
+    @action(detail=False, permission_classes=[permissions.IsAuthenticated])
     def subscriptions(
         self,
         request: HttpRequest,
@@ -46,13 +46,13 @@ class UserViewSet(DjoserUserViewSet):
         )
         return self.get_paginated_response(serializer.data)
 
-    @action(methods=['get', 'delete'], detail=True)
+    @action(detail=True, permission_classes=[permissions.IsAuthenticated])
     def subscribe(
         self,
         request: HttpRequest,
         id: typing.Optional[int] = None,
     ) -> HttpResponse:
-        """Эндпоинт для добавления или удаления подписки на автора"""
+        """Эндпоинт для добавления подписки на автора"""
 
         current_user = self.get_instance()
         users_with_recipes = get_users_with_recipes()
@@ -65,21 +65,6 @@ class UserViewSet(DjoserUserViewSet):
             author=current_author,
             subscriber=current_user,
         )
-
-        if self.request.method == 'DELETE':
-            deleted = service.dell_subscription()
-
-            if not deleted:
-                return Response(
-                    {
-                        'errors': 'Пользователь не был подписан на этого автора',
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        # Обработка метода `GET` - оформление подписки
         subscription, created = service.add_subscription()
 
         if not created:
@@ -99,17 +84,49 @@ class UserViewSet(DjoserUserViewSet):
             status=status.HTTP_201_CREATED,
         )
 
-    def get_queryset(self) -> 'QuerySet[CustomUser]':
+    @subscribe.mapping.delete
+    def unsubscribe(
+        self,
+        request: HttpRequest,
+        id: typing.Optional[int] = None,
+    ) -> HttpResponse:
+        """Эндпоинт для отмены подписки на автора"""
+
         current_user = self.get_instance()
-        return (
-            super()
-            .get_queryset()
-            .get_with_subscription_status(subscriber_id=current_user)
+        users_with_recipes = get_users_with_recipes()
+        current_author = get_object_or_404(
+            users_with_recipes,
+            pk=id,
         )
 
+        service = SubscriptionService(
+            author=current_author,
+            subscriber=current_user,
+        )
+        deleted = service.dell_subscription()
+
+        if not deleted:
+            return Response(
+                {
+                    'errors': 'Пользователь не был подписан на этого автора',
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_queryset(self) -> 'QuerySet[CustomUser]':
+        current_user = self.get_instance()
+        queryset = super().get_queryset()
+
+        if current_user.is_anonymous:
+            return queryset.set_default_subscription_status(is_subscribed=False)
+
+        return queryset.get_with_subscription_status(subscriber_id=current_user)
+
     def get_permissions(self) -> typing.List[typing.Any]:
-        if self.action in {'subscribe', 'subscriptions'}:
-            permission_classes = [IsAuthenticated]
+        if self.action == 'retrieve':
+            permission_classes = [permissions.IsAuthenticatedOrReadOnly]
         else:
             return super().get_permissions()
 
