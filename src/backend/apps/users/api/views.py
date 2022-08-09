@@ -52,7 +52,7 @@ class UserViewSet(DjoserUserViewSet):
         request: HttpRequest,
         id: typing.Optional[int] = None,
     ) -> HttpResponse:
-        """Эндпоинт для добавления или удаления подписки на автора"""
+        """Эндпоинт для добавления подписки на автора"""
 
         current_user = self.get_instance()
         users_with_recipes = get_users_with_recipes()
@@ -65,21 +65,6 @@ class UserViewSet(DjoserUserViewSet):
             author=current_author,
             subscriber=current_user,
         )
-
-        if self.request.method == 'DELETE':
-            deleted = service.dell_subscription()
-
-            if not deleted:
-                return Response(
-                    {
-                        'errors': 'Пользователь не был подписан на этого автора',
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        # Обработка метода `GET` - оформление подписки
         subscription, created = service.add_subscription()
 
         if not created:
@@ -98,6 +83,37 @@ class UserViewSet(DjoserUserViewSet):
             serializer.data,
             status=status.HTTP_201_CREATED,
         )
+
+    @subscribe.mapping.delete
+    def unsubscribe(
+        self,
+        request: HttpRequest,
+        id: typing.Optional[int] = None,
+    ) -> HttpResponse:
+        """Эндпоинт для отмены подписки на автора"""
+
+        current_user = self.get_instance()
+        users_with_recipes = get_users_with_recipes()
+        current_author = get_object_or_404(
+            users_with_recipes,
+            pk=id,
+        )
+
+        service = SubscriptionService(
+            author=current_author,
+            subscriber=current_user,
+        )
+        deleted = service.dell_subscription()
+
+        if not deleted:
+            return Response(
+                {
+                    'errors': 'Пользователь не был подписан на этого автора',
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_queryset(self) -> 'QuerySet[CustomUser]':
         current_user = self.get_instance()
