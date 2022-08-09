@@ -1,9 +1,9 @@
 import typing
 
 from djoser.views import UserViewSet as DjoserUserViewSet
+from rest_framework import permissions
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
@@ -28,7 +28,7 @@ class UserViewSet(DjoserUserViewSet):
     pagination_class = PageNumberLimitPagination
     recipes_limit_query_param = 'recipes_limit'
 
-    @action(methods=['get'], detail=False)
+    @action(detail=False, permission_classes=[permissions.IsAuthenticated])
     def subscriptions(
         self,
         request: HttpRequest,
@@ -46,7 +46,7 @@ class UserViewSet(DjoserUserViewSet):
         )
         return self.get_paginated_response(serializer.data)
 
-    @action(methods=['get', 'delete'], detail=True)
+    @action(detail=True, permission_classes=[permissions.IsAuthenticated])
     def subscribe(
         self,
         request: HttpRequest,
@@ -124,8 +124,8 @@ class UserViewSet(DjoserUserViewSet):
         )
 
     def get_permissions(self) -> typing.List[typing.Any]:
-        if self.action in {'subscribe', 'subscriptions'}:
-            permission_classes = [IsAuthenticated]
+        if self.action == 'retrieve':
+            permission_classes = [permissions.IsAuthenticatedOrReadOnly]
         else:
             return super().get_permissions()
 
