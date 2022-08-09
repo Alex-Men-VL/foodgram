@@ -4,6 +4,7 @@ services:
     image: postgres:12.0-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./backups:/backups
     env_file: ./src/backend/.envs/.env
 
   backend:
