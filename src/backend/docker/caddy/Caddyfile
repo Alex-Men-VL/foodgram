@@ -10,9 +10,7 @@
     }
 
     handle /api/v1/* {
-        reverse_proxy backend:8000 {
-            header_up Host {upstream_hostport}
-        }
+        reverse_proxy backend:8000
     }
 
     handle {
