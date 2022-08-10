@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
 
@@ -20,9 +19,8 @@ class TagTest(TestCase):
     def test_hex_code_validation(self) -> None:
         """Проверка валидации HEX-кода."""
 
-        tag: Tag = TagFactory.build(color='red')
-        with self.assertRaises(ValidationError):
-            tag.full_clean()
+        with self.assertRaises(IntegrityError):
+            TagFactory.create(color='red')
 
     def test_name_color_unique_together(self) -> None:
         """Проверка совместной уникальности полей name и color."""
