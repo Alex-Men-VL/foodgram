@@ -9,13 +9,12 @@ services:
     volumes:
       # We only mount source code in development:
       - ./src/backend:/code
-      - ./data:/data
 
   # In production uses caddy
   nginx:
     build:
       context: .
-      dockerfile: ./src/backend/docker/server/development/Dockerfile
+      dockerfile: ./src/backend/docker/nginx/Dockerfile
     image: foodgram_nginx
     ports:
       - 80:80
