@@ -6,12 +6,15 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import validators
 from django.db import models
+from django.db.models import functions
 from django.db.models import QuerySet
 
 from apps.carts.models import Cart
 from apps.favourites.models import Favourite
 
 CustomUser = get_user_model()
+models.CharField.register_lookup(functions.Length, 'len')
+models.TextField.register_lookup(functions.Length, 'len')
 
 
 class RecipeQuerySet(QuerySet):
@@ -73,13 +76,13 @@ class Recipe(behaviors.Timestamped):
         'Название',
         max_length=255,
         db_index=True,
-        unique=True,
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='recipes',
         verbose_name='Автор',
         on_delete=models.CASCADE,
+        db_index=True,
     )
     image = models.ImageField(
         'Картинка',
@@ -112,9 +115,24 @@ class Recipe(behaviors.Timestamped):
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-        ordering = [
-            'name',
-        ]
+        ordering = ('name',)
+        constraints = (
+            models.UniqueConstraint(
+                fields=(
+                    'name',
+                    'author',
+                ),
+                name='%(app_label)s_%(class)s_name_author_unique_together',
+            ),
+            models.CheckConstraint(
+                check=models.Q(name__len__gt=0),
+                name='%(app_label)s_%(class)s_name_is_empty',
+            ),
+            models.CheckConstraint(
+                check=models.Q(text__len__gt=0),
+                name='%(app_label)s_%(class)s_text_is_empty',
+            ),
+        )
 
     def __str__(self) -> str:
         return f'{self.name}'.strip()
@@ -142,9 +160,18 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецепте'
-        unique_together = (
-            'ingredient',
-            'recipe',
+        constraints = (
+            models.UniqueConstraint(
+                fields=(
+                    'ingredient',
+                    'recipe',
+                ),
+                name='%(app_label)s_%(class)s_recipe_ingredient_unique_together',
+            ),
+            models.CheckConstraint(
+                check=models.Q(amount__gt=0),
+                name='%(app_label)s_%(class)s_amount_less_than_one',
+            ),
         )
 
     def __str__(self) -> str:

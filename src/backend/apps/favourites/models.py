@@ -32,9 +32,14 @@ class Favourite(behaviors.Timestamped):
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
-        unique_together = (
-            'recipe',
-            'user',
+        constraints = (
+            models.UniqueConstraint(
+                fields=(
+                    'recipe',
+                    'user',
+                ),
+                name='%(app_label)s_%(class)s_recipe_user_unique_together',
+            ),
         )
 
     def __str__(self) -> str:
