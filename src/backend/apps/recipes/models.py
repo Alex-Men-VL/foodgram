@@ -160,9 +160,18 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецепте'
-        unique_together = (
-            'ingredient',
-            'recipe',
+        constraints = (
+            models.UniqueConstraint(
+                fields=(
+                    'ingredient',
+                    'recipe',
+                ),
+                name='%(app_label)s_%(class)s_recipe_ingredient_unique_together',
+            ),
+            models.CheckConstraint(
+                check=models.Q(amount__gt=0),
+                name='%(app_label)s_%(class)s_amount_less_than_one',
+            ),
         )
 
     def __str__(self) -> str:
