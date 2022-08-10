@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
 
@@ -43,10 +42,8 @@ class SubscriptionTest(TestCase):
     def test_not_allow_self_following(self) -> None:
         """Проверка невозможности подписаться на самого себя."""
 
-        subscription: Subscription = SubscriptionFactory.build(
-            subscriber=self.author,
-            author=self.author,
-        )
-
-        with self.assertRaises(ValidationError):
-            subscription.full_clean()
+        with self.assertRaises(IntegrityError):
+            SubscriptionFactory.create(
+                subscriber=self.author,
+                author=self.author,
+            )
