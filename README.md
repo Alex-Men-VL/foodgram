@@ -16,8 +16,12 @@ more selected dishes before going to the store.
   - [Prerequisites](#dev-prerequisites)
   - [Installation](#dev-installation)
   - [Testing](#dev-testing)
-  - [Available environment variables](#dev-envs)
 - [Production](#production)
+  - [Deployment via docker compose](#prod-docker)
+    - [Prerequisites](#prod-docker-prerequisites)
+    - [Installation](#prod-docker-installation)
+  - [Deployment via kubernetes](#prod-kuber)
+- [Available environment variables](#envs)
 - [Authors](#authors)
 - [License](#license)
 - [Thanks](#thanks)
@@ -43,6 +47,10 @@ more selected dishes before going to the store.
 <a name="development"></a>
 ## Development
 
+On development uses [Nginx](https://nginx.org/ru/) in conjunction with [Gunicorn](https://gunicorn.org/).
+
+Static content is serving by nginx.
+
 <a name="dev-prerequisites"></a>
 ### Prerequisites
 
@@ -61,6 +69,14 @@ $ git clone git@github.com:Alex-Men-VL/foodgram.git
 $ cd foodgram
 ```
 
+Create an .env file based on a template:
+
+```shell
+$ cp src/backend/.envs/.env.template src/backend/.envs/.env
+```
+
+[Change environment variables](#envs)
+
 Start the project:
 
 ```shell
@@ -70,16 +86,23 @@ $ docker-compose up --build
 Check container status:
 
 ```shell
-$ docker ps
+$ docker ps -a
 ```
 
 Expected result:
 
 ```shell
-CONTAINER ID   IMAGE                  COMMAND                  CREATED             STATUS             PORTS                    NAMES
-cd692f2bf19d   foodgram_nginx         "/docker-entrypoint.…"   About an hour ago   Up About an hour   0.0.0.0:80->80/tcp       foodgram-nginx-1
-cfd0c78ccf21   foodgram_backend       "/docker-entrypoint.…"   About an hour ago   Up About an hour                            foodgram-backend-1
-77ddcbe9d6e2   postgres:12.0-alpine   "docker-entrypoint.s…"   About an hour ago   Up About an hour   0.0.0.0:5432->5432/tcp   foodgram-db-1
+CONTAINER ID   IMAGE                   COMMAND                  CREATED              STATUS                          PORTS                    NAMES
+222c66ea3eec   foodgram_nginx          "/docker-entrypoint.…"   About a minute ago   Up About a minute               0.0.0.0:80->80/tcp       foodgram-nginx-1
+f5f7f90cc586   foodgram_backend:dev    "/docker-entrypoint.…"   About a minute ago   Up About a minute                                        foodgram-backend-1
+c8ef80ae9232   postgres:12.0-alpine    "docker-entrypoint.s…"   About a minute ago   Up About a minute               0.0.0.0:5432->5432/tcp   foodgram-db-1
+6152c7bf6fd1   foodgram_frontend:dev   "docker-entrypoint.s…"   About a minute ago   Exited (0) About a minute ago                            foodgram-frontend-1
+```
+
+In the new terminal, without shutting down the site, load test data into the database:
+
+```shell
+$ docker-compose exec db psql -U <db user name, default - foodgram_db_user> -f /backups/foodgram-test-data.sql
 ```
 
 The site is available via links:
@@ -115,15 +138,63 @@ Run `Django tests`:
 $ docker compose run --rm backend pytest
 ```
 
-<a name="dev-envs"></a>
-### Available environment variables
-
-TODO
-
 <a name="production"></a>
 ## Production
 
+On development uses [Caddy](https://caddyserver.com/) in conjunction with [Gunicorn](https://gunicorn.org/).
+
+Static content is serving by [Yandex Object Storage](https://cloud.yandex.ru/services/storage).
+
+<a name="prod-docker"></a>
+### Deployment via docker compose
+
+<a name="prod-docker-prerequisites"></a>
+#### Prerequisites
+
+The following tools should be installed:
+
+- [Docker-compose](https://docs.docker.com/compose/install/)
+
+To use existing images:
+
+```shell
+$ export BACKEND_IMAGE=ghcr.io/alex-men-vl/foodgram/backend:latest
+$ export FRONTEND_IMAGE=ghcr.io/alex-men-vl/foodgram/frontend:latest
+```
+
+<a name="prod-docker-installation"></a>
+#### Installation
+
+Download the code and go into the repository:
+
+```shell
+$ git clone git@github.com:Alex-Men-VL/foodgram.git
+$ cd foodgram
+```
+
+Create an .env file based on a template:
+
+```shell
+$ cp src/backend/.envs/.env.template src/backend/.envs/.env
+```
+
+[Set environment variables](#envs)
+
+Start the project:
+
+```shell
+$ docker-compose up
+```
+
+<a name="prod-kuber"></a>
+### Deployment via kubernetes
+
 TODO
+
+<a name="envs"></a>
+## Available environment variables
+
+The list of used environment variables is specified in [.env.template](src/backend/.envs/.env.template).
 
 <a name="authors"></a>
 ## Authors
