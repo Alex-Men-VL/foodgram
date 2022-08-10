@@ -1,12 +1,7 @@
-from abc import ABC
-from abc import abstractmethod
 import csv
 import json
-import os
 from pathlib import Path
 import typing
-from urllib import parse
-from urllib.request import urlopen
 
 import pydantic
 
@@ -15,16 +10,7 @@ from django.core.management import CommandError
 from ._models import Ingredient
 
 
-class Handler(ABC):
-    __supported_extensions: set = set()
-
-    @abstractmethod
-    def handle(self) -> typing.List[Ingredient]:
-        """Обработка данных."""
-        pass
-
-
-class FileHandler(Handler):
+class FileHandler:
     __supported_extensions = {'.json', '.csv'}
 
     def __init__(self, file_path: str) -> None:
@@ -71,75 +57,6 @@ class FileHandler(Handler):
         ingredient_fields = list(Ingredient.schema()['properties'].keys())
         with open(self.file_path, 'r') as csv_file:
             reader = csv.DictReader(csv_file, fieldnames=ingredient_fields)
-            ingredients = pydantic.parse_obj_as(
-                typing.List[Ingredient],
-                list(reader),
-            )
-        return ingredients
-
-
-class URLHandler(Handler):
-    __supported_extensions = {'.json', '.csv'}
-
-    def __init__(self, url: str) -> None:
-        self.url = url
-        self._extension = self._get_file_extension(url)
-        self._check_url()
-
-    def handle(self) -> typing.List[Ingredient]:
-        """Обработка данных по URL."""
-
-        payload = []
-        if self._extension == '.json':
-            payload = self._handle_json_from_url()
-        elif self._extension == '.csv':
-            payload = self._handle_csv_from_url()
-        return payload
-
-    def _check_url(self) -> None:
-        """Проверка URL на корректность.
-
-        :raise CommandError: Если URL не корректен или имеет неподдерживаемое расширение
-        """
-
-        parsed_url = parse.urlparse(parse.unquote(self.url))
-
-        if not parsed_url.scheme:
-            raise CommandError('Некорректный URL.')
-        if not self._extension:
-            raise CommandError('Файл не найден.')
-        if self._extension not in self.__supported_extensions:
-            raise CommandError('Не поддерживаемое расширение.')
-
-    @staticmethod
-    def _get_file_extension(url: str) -> str:
-        """Парсит URL и возвращает расширение файла.
-
-        :param url: URL путь файла
-        """
-
-        file_path = parse.urlparse(parse.unquote(url)).path
-        _, file_extension = os.path.splitext(file_path)
-        return file_extension
-
-    def _handle_json_from_url(self) -> typing.List[Ingredient]:
-        """Чтение и валидация json файла из URL."""
-
-        with urlopen(self.url) as response:
-            decoded_ingredients = json.loads(response.read().decode())
-        ingredients = pydantic.parse_obj_as(
-            typing.List[Ingredient],
-            decoded_ingredients,
-        )
-        return ingredients
-
-    def _handle_csv_from_url(self) -> typing.List[Ingredient]:
-        """Чтение и валидация csv файла из URL."""
-
-        ingredient_fields = list(Ingredient.schema()['properties'].keys())
-        with urlopen(self.url) as response:
-            lines = [line.decode() for line in response.readlines()]
-            reader = csv.DictReader(lines, fieldnames=ingredient_fields)
             ingredients = pydantic.parse_obj_as(
                 typing.List[Ingredient],
                 list(reader),

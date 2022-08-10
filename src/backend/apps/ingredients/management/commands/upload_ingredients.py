@@ -9,8 +9,6 @@ from django.core.management.base import CommandParser
 from django.db import transaction
 
 from ._handlers import FileHandler
-from ._handlers import Handler
-from ._handlers import URLHandler
 from ._models import Ingredient
 
 
@@ -20,14 +18,8 @@ class Command(BaseCommand):
     __supported_extensions = {'.json', '.csv'}
 
     def handle(self, *args: str, **options: str) -> None:
-        handler: Handler
-
-        if file_path := options.get('file'):
-            handler = FileHandler(file_path)
-        elif file_url := options.get('url'):
-            handler = URLHandler(file_url)
-        else:
-            raise CommandError('Передайте путь к локальному файлу или URL.')
+        file_path = options.get('file', '')
+        handler = FileHandler(file_path)
 
         try:
             ingredients = handler.handle()
@@ -42,11 +34,7 @@ class Command(BaseCommand):
             '--file',
             help='Путь к локальному файлу с ингредиентами.',
             type=str,
-        )
-        parser.add_argument(
-            '--url',
-            help='URl адрес файла с ингредиентами.',
-            type=str,
+            required=True,
         )
 
     @staticmethod
