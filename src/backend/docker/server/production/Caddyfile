@@ -1,11 +1,18 @@
-http://127.0.0.1 {
+:80 {
     handle /api/docs/* {
         root * /code/frontend
         try_files {uri} {uri}/redoc.html
         file_server
     }
+
     handle /admin/* {
         reverse_proxy backend:8000
+    }
+
+    handle /api/v1/* {
+        reverse_proxy backend:8000 {
+            header_up Host {upstream_hostport}
+        }
     }
 
     handle {
