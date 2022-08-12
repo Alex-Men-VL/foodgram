@@ -1,0 +1,98 @@
+apiVersion : apps/v1
+kind : Deployment
+metadata:
+  name : web-deployment
+  namespace: foodgram-prod
+  labels:
+    app: foodgram-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: foodgram
+  template:
+    metadata:
+      labels:
+        project: foodgram
+    spec:
+#      volumes:
+#        ...
+#      initContainers:
+#        - name: frontend
+#          image: ghcr.io/alex-men-vl/foodgram/frontend:latest
+      containers:
+        - name: backend
+          image: ghcr.io/alex-men-vl/foodgram/backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+          command:
+            - bash
+            - ./docker/django/gunicorn.sh
+          envFrom:
+            - configMapRef:
+                name: web-configmap
+          env:
+            - name: DJANGO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django
+                  key: secret_key
+            - name: DJANGO_DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: django
+                  key: database_name
+            - name: DJANGO_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: django
+                  key: database_user
+            - name: DJANGO_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: django
+                  key: database_password
+            - name: DJANGO_DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: django
+                  key: database_host
+            - name: DJANGO_DATABASE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: django
+                  key: database_port
+            - name: DJANGO_AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: access_key_id
+            - name: DJANGO_AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: secret_access_key
+            - name: DJANGO_AWS_STORAGE_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: bucket_name
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+  namespace: foodgram-prod
+spec:
+  type: LoadBalancer
+  selector:
+    project: foodgram
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
