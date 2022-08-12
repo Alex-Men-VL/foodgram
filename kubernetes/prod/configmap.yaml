@@ -1,0 +1,8 @@
+apiVersion : v1
+kind : ConfigMap
+metadata:
+  name: web-configmap
+  namespace: foodgram-prod
+data:
+  DJANGO_ENV: 'production'
+  DJANGO_AWS_S3_ENDPOINT_URL: 'https://storage.yandexcloud.net/'
