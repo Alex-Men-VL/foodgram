@@ -6,3 +6,4 @@ metadata:
 data:
   DJANGO_ENV: 'production'
   DJANGO_AWS_S3_ENDPOINT_URL: 'https://storage.yandexcloud.net/'
+  DOMAIN_NAME: 'foodgram.test'
