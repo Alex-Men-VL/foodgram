@@ -1,4 +1,4 @@
-FROM node:13.12.0-alpine as build
+FROM node:14.17.3-alpine as builder
 
 WORKDIR /app
 
@@ -10,4 +10,12 @@ COPY /src/frontend /app
 
 RUN npm run build
 
-CMD cp -r build result_build
+# ---------------------------------------------------------------
+
+FROM node:14.17.3-alpine
+
+WORKDIR /app
+
+RUN npm install -g serve
+
+COPY --from=builder /app/build ./build

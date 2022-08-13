@@ -20,8 +20,8 @@ services:
           - foodgram_backend
     command: bash ./docker/django/gunicorn.sh
     volumes:
-      - static_data:/var/www/django/static
-      - media_data:/var/www/django/media
+      - backend_static_data:/var/www/django/static
+      - backend_media_data:/var/www/django/media
     env_file: ./src/backend/.envs/.env
     restart: unless-stopped
     depends_on:
@@ -36,9 +36,13 @@ services:
         cache_from:
           - foodgram_frontend
     volumes:
-      - ./src/frontend:/app/result_build/
+      - frontend_static_data:/app/build/static
+    command: serve -s build -l 3000
+    ports:
+      - 127.0.0.1:3000:3000
 
 volumes:
   db_data:
-  static_data:
-  media_data:
+  backend_static_data:
+  backend_media_data:
+  frontend_static_data:
