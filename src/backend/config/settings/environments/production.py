@@ -12,6 +12,7 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 ALLOWED_HOSTS = [
     config('DOMAIN_NAME'),
+    'backend',
     '127.0.0.1',
 ]
 
