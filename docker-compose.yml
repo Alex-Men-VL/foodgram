@@ -5,7 +5,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./backups:/backups
-    env_file: ./src/backend/.envs/.env
+    env_file: ./src/.envs/.env
 
   backend:
     <<: &backend
@@ -22,7 +22,7 @@ services:
     volumes:
       - backend_static_data:/var/www/django/static
       - backend_media_data:/var/www/django/media
-    env_file: ./src/backend/.envs/.env
+    env_file: ./src/.envs/.env
     restart: unless-stopped
     depends_on:
       - db
