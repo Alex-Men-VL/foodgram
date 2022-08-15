@@ -71,7 +71,7 @@ jobs:
 
       - name: Create .env configuration file
         run: |
-          cd src/backend/.envs
+          cd src/.envs
           cp .env.template .env
 
       - name: Set up Docker Buildx
@@ -104,7 +104,13 @@ jobs:
       needs.check_changes.outputs.current_branch == 'main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create .env configuration file
+        run: |
+          cd src/.envs
+          cp .env.template .env
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
@@ -142,11 +148,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Create .env configuration file
         run: |
-          cd src/backend/.envs
+          cd src/.envs
           cp .env.template .env
 
       - name: Log in to Docker Hub
