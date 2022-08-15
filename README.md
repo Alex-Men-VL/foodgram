@@ -72,7 +72,7 @@ $ cd foodgram
 Create an .env file based on a template:
 
 ```shell
-$ cp src/backend/.envs/.env.template src/backend/.envs/.env
+$ cp src/.envs/.env.template src/.envs/.env
 ```
 
 [Change environment variables](#envs)
@@ -92,11 +92,11 @@ $ docker ps -a
 Expected result:
 
 ```shell
-CONTAINER ID   IMAGE                   COMMAND                  CREATED              STATUS                          PORTS                    NAMES
-222c66ea3eec   foodgram_nginx          "/docker-entrypoint.…"   About a minute ago   Up About a minute               0.0.0.0:80->80/tcp       foodgram-nginx-1
-f5f7f90cc586   foodgram_backend:dev    "/docker-entrypoint.…"   About a minute ago   Up About a minute                                        foodgram-backend-1
-c8ef80ae9232   postgres:12.0-alpine    "docker-entrypoint.s…"   About a minute ago   Up About a minute               0.0.0.0:5432->5432/tcp   foodgram-db-1
-6152c7bf6fd1   foodgram_frontend:dev   "docker-entrypoint.s…"   About a minute ago   Exited (0) About a minute ago                            foodgram-frontend-1
+CONTAINER ID   IMAGE                   COMMAND                  CREATED          STATUS                  PORTS                      NAMES
+91bb9f1e2f4d   foodgram_nginx          "/docker-entrypoint.…"   8 seconds ago    Up Less than a second   0.0.0.0:80->80/tcp         foodgram-nginx-1
+ab13c1bb8a07   foodgram_backend:dev    "/docker-entrypoint.…"   9 seconds ago    Up 2 seconds                                       foodgram-backend-1
+90e56294f31e   postgres:12.0-alpine    "docker-entrypoint.s…"   9 seconds ago    Up 5 seconds            0.0.0.0:5432->5432/tcp     foodgram-db-1
+8823462d857c   foodgram_frontend:dev   "docker-entrypoint.s…"   9 seconds ago    Up 5 seconds            127.0.0.1:3000->3000/tcp   foodgram-frontend-1
 ```
 
 In the new terminal, without shutting down the site, load test data into the database:
@@ -175,7 +175,7 @@ $ cd foodgram
 Create an .env file based on a template:
 
 ```shell
-$ cp src/backend/.envs/.env.template src/backend/.envs/.env
+$ cp src/.envs/.env.template src/.envs/.env
 ```
 
 [Set environment variables](#envs)
@@ -194,7 +194,7 @@ TODO
 <a name="envs"></a>
 ## Available environment variables
 
-The list of used environment variables is specified in [.env.template](src/backend/.envs/.env.template).
+The list of used environment variables is specified in [.env.template](src/.envs/.env.template).
 
 <a name="authors"></a>
 ## Authors
