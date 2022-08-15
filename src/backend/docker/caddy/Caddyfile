@@ -1,6 +1,9 @@
 :80 {
+
+    # === URL ROUTING ===
+
     handle /api/docs/* {
-        root * /code/frontend
+        root * /usr/src/app
         try_files {uri} {uri}/redoc.html
         file_server
     }
@@ -14,10 +17,10 @@
     }
 
     handle {
-        root * /code/frontend
-        try_files {path} /index.html
-        file_server
+        reverse_proxy frontend:3000
     }
+
+    # === LOGGING ===
 
     log {
 		output stdout
