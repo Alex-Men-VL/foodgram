@@ -16,7 +16,7 @@ DEBUG = True
 SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 ALLOWED_HOSTS = [
-    'foodgram',
+    config('DOMAIN_NAME'),
     'localhost',
     '0.0.0.0',  # noqa: S104
     '127.0.0.1',
