@@ -1,4 +1,6 @@
-FROM node:14.17.3-alpine as builder
+ARG NODE_VERSION=14.17.3
+
+FROM node:${NODE_VERSION}-alpine as builder
 
 WORKDIR /app
 
@@ -12,7 +14,7 @@ RUN npm run build
 
 # ---------------------------------------------------------------
 
-FROM node:14.17.3-alpine
+FROM node:${NODE_VERSION}-alpine
 
 WORKDIR /app
 
