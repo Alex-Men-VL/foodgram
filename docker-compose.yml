@@ -35,8 +35,6 @@ services:
         dockerfile: ./src/frontend/docker/node/Dockerfile
         cache_from:
           - foodgram_frontend
-    volumes:
-      - frontend_static_data:/app/build/static
     command: serve -s build -l 3000
     ports:
       - 127.0.0.1:3000:3000
@@ -45,4 +43,3 @@ volumes:
   db_data:
   backend_static_data:
   backend_media_data:
-  frontend_static_data:

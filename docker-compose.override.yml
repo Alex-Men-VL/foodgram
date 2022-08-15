@@ -19,9 +19,10 @@ services:
     ports:
       - 80:80
     volumes:
-      - frontend_static_data:/usr/src/app/frontend_data/static/
+      # Api-schema
       - ./docs/redoc.html:/usr/src/app/api/docs/redoc.html
       - ./docs/openapi-schema.yml:/usr/src/app/api/docs/openapi-schema.yml
+      # Backend static
       - backend_static_data:/usr/src/app/backend_data/static/
       - backend_media_data:/usr/src/app/backend_data/media/
     depends_on:
