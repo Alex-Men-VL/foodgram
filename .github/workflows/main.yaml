@@ -11,8 +11,8 @@ on:
 
 env:
   CONTAINER_REGISTRY: ghcr.io
-  BACKEND_IMAGE: ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/backend
-  FRONTEND_IMAGE: ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/frontend
+  BACKEND_IMAGE: ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/backend:prod
+  FRONTEND_IMAGE: ghcr.io/$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')/frontend:prod
 
 jobs:
   check_changes:
