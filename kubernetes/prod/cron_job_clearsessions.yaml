@@ -1,0 +1,74 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: django-clearsessions
+  namespace: foodgram-prod
+  labels:
+    app: foodgram-app
+spec:
+  schedule: '@monthly'
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      ttlSecondsAfterFinished: 100
+      activeDeadlineSeconds: 100
+      template:
+        spec:
+          containers:
+            - name: django-cron-job
+              image: ghcr.io/alex-men-vl/foodgram/backend:prod
+              imagePullPolicy: IfNotPresent
+
+              command: ['python', 'manage.py', 'clearsessions']
+
+              envFrom:
+                - configMapRef:
+                    name: web-configmap
+              env:
+                - name: DJANGO_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: django
+                      key: secret_key
+                - name: DJANGO_DATABASE_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: django
+                      key: database_name
+                - name: DJANGO_DATABASE_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: django
+                      key: database_user
+                - name: DJANGO_DATABASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: django
+                      key: database_password
+                - name: DJANGO_DATABASE_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: django
+                      key: database_host
+                - name: DJANGO_DATABASE_PORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: django
+                      key: database_port
+                - name: DJANGO_AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: aws
+                      key: access_key_id
+                - name: DJANGO_AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: aws
+                      key: secret_access_key
+                - name: DJANGO_AWS_STORAGE_BUCKET_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: aws
+                      key: bucket_name
+
+          restartPolicy: Never
