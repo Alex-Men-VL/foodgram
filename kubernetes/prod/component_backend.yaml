@@ -1,7 +1,7 @@
 apiVersion : apps/v1
 kind : Deployment
 metadata:
-  name : web-deployment
+  name : backend-deployment
   namespace: foodgram-prod
   labels:
     app: foodgram-app
@@ -10,26 +10,21 @@ spec:
   selector:
     matchLabels:
       project: foodgram
+      component: backend
   template:
     metadata:
       labels:
         project: foodgram
+        component: backend
     spec:
-#      volumes:
-#        ...
-#      initContainers:
-#        - name: frontend
-#          image: ghcr.io/alex-men-vl/foodgram/frontend:latest
       containers:
         - name: backend
           image: ghcr.io/alex-men-vl/foodgram/backend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
-              name: http
-          command:
-            - bash
-            - ./docker/django/gunicorn.sh
+              name: http-backend
+          command: ['bash', './docker/django/gunicorn.sh']
           envFrom:
             - configMapRef:
                 name: web-configmap
@@ -85,36 +80,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: web-service
+  name: backend-service
   namespace: foodgram-prod
 spec:
   type: ClusterIP
   selector:
     project: foodgram
+    component: backend
   ports:
-    - port: 80
-      targetPort: http
+    - port: 8000
+      targetPort: http-backend
       protocol: TCP
-      name: http
-
----
-
-apiVersion : networking.k8s.io/v1
-kind : Ingress
-metadata :
-  name : web-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-spec :
-  rules :
-    - host : foodgram.test
-      http :
-        paths :
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: web-service
-                port:
-                  number: 80
+      name: http-backend
