@@ -135,7 +135,7 @@ jobs:
           CONTAINER: frontend
           IMAGE_NAME: ${{ env.FRONTEND_IMAGE }}
         run: |
-          DOCKER_BUILDKIT=1 docker-compose build $CONTAINER
+          DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml -f docker-compose.prod.yml build $CONTAINER
           docker push $IMAGE_NAME
 
   build_backend:
