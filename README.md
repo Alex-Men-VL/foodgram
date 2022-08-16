@@ -372,6 +372,12 @@ To get pod logs use the following command:
 $ kubectl logs <POD name>
 ```
 
+Also, you can use the web-based Kubernetes user interface for troubleshoot your containerized application:
+
+```shell
+$ minikube dashboard
+```
+
 <a name="prod-kuber-db"></a>
 #### Deploy PostgreSQL in a cluster
 
