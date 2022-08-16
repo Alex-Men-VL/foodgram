@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: foodgram-prod
+  labels:
+    app: foodgram-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: foodgram
+      component: frontend
+  template:
+    metadata:
+      labels:
+        project: foodgram
+        component: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/alex-men-vl/foodgram/frontend:latest
+          ports:
+            - containerPort: 3000
+              name: http-frontend
+          command: ["sh", "-c", "serve -s build -l 3000 --no-clipboard"]
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: foodgram-prod
+spec:
+  type: ClusterIP
+  selector:
+    project: foodgram
+    component: frontend
+  ports:
+    - port: 3000
+      targetPort: http-frontend
+      protocol: TCP
+      name: http-frontend
