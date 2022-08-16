@@ -135,7 +135,7 @@ jobs:
           CONTAINER: frontend
           IMAGE_NAME: ${{ env.FRONTEND_IMAGE }}
         run: |
-          DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml -f docker-compose.prod.yml build $CONTAINER
+          DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml build $CONTAINER
           docker push $IMAGE_NAME
 
   build_backend:
@@ -179,5 +179,5 @@ jobs:
           CONTAINER: backend
           IMAGE_NAME: ${{ env.BACKEND_IMAGE }}
         run: |
-          DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml -f docker-compose.prod.yml build $CONTAINER
+          DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml build $CONTAINER
           docker push $IMAGE_NAME
